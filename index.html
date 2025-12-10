@@ -740,7 +740,7 @@
             showLoading(false);
         }
 
-        // 3. Enviar Pedido (CORRIGIDO E DEBUG)
+        // 3. Enviar Pedido (CORRIGIDO PARA IR AO HISTÓRICO)
         window.submitOrder = async () => {
             if(!selectedFilial) {
                 showAlert("Erro crítico: Nenhuma filial selecionada. Faça login novamente.");
@@ -759,14 +759,31 @@
             };
             
             try {
+                // Salva o pedido
                 await addDoc(collection(db, "pedidos"), order);
+                
+                // Limpa o pedido atual para não duplicar se o usuário voltar
+                window.currentOrder = {};
+                window.currentExtraItems = "";
+                document.getElementById('extra-items-textarea').value = "";
+
                 showAlert("Pedido enviado com sucesso!");
-                goToPage('page-menu');
+                
+                // Carrega o histórico e redireciona (Isso corrige o bug de não sair da tela)
+                await renderClinicHistory(); 
+
             } catch (error) {
                 console.error("Erro no envio:", error);
-                showAlert("Erro no envio: " + error.message + " (Verifique as Regras no Firebase)");
+                
+                // Verifica se é erro de índice (comum ao usar where e orderBy juntos)
+                if(error.message.includes("index")) {
+                    alert("ATENÇÃO: É necessário criar um índice no Firebase. Abra o console do navegador (F12) e clique no link fornecido pelo erro.");
+                }
+
+                showAlert("Erro no envio: " + error.message);
+            } finally {
+                showLoading(false);
             }
-            showLoading(false);
         }
 
         // 4. Histórico da Clínica
@@ -817,7 +834,11 @@
 
             } catch (error) {
                 console.error(error);
-                showAlert("Erro ao carregar histórico: " + error.message);
+                if(error.message.includes("index")) {
+                     showAlert("ERRO DE ÍNDICE: Abra o console (F12) e clique no link para criar o índice no Firebase.");
+                } else {
+                     showAlert("Erro ao carregar histórico: " + error.message);
+                }
             }
             showLoading(false);
         }
