@@ -354,11 +354,11 @@
         let filialInventory = {};
         window.currentOrder = {};
         window.currentExtraItems = "";
-        let minUnlocked = false; // ESTADO: Controla se os mínimos podem ser editados
+        let minUnlocked = false; 
         
         const FILIAL_PASSWORDS = { 'Patos de Minas': '123', 'São Gotardo': '123', 'Ibiá': '123', 'Guarda dos Ferreiros': '123' };
         const ADMIN_PASSWORD = 'admin123';
-        const MASTER_PASSWORD = 'master'; // SENHA PARA ALTERAR MÍNIMOS
+        const MASTER_PASSWORD = 'master'; 
 
         // CATÁLOGO
         const INITIAL_CATALOG = {
@@ -918,9 +918,8 @@
             if (pwd === MASTER_PASSWORD) {
                 minUnlocked = true;
                 showAlert("Mínimos desbloqueados!");
-                renderStockTable(); // Atualiza a tabela para habilitar os inputs
+                renderStockTable(); 
                 
-                // Muda a cor do botão para mostrar que está desbloqueado
                 const btn = document.getElementById('btn-unlock');
                 btn.classList.remove('bg-gray-200', 'text-gray-600');
                 btn.classList.add('bg-green-200', 'text-green-800');
@@ -929,21 +928,23 @@
             }
         }
 
+        // --- RENDERIZAÇÃO OTIMIZADA (SEM TRAVAMENTOS) ---
         function renderStockTable() {
             const tbody = document.getElementById('stock-table-body');
-            tbody.innerHTML = '';
             const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
             const grouped = groupProducts(list);
+            
+            // OTIMIZAÇÃO: Cria uma string gigante primeiro, depois desenha uma única vez.
+            let htmlBuffer = '';
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                // CORRIGIDO: Removido 'sticky top-10' para evitar sobreposição
-                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
+                // CORRIGIDO: Removido 'sticky top-10' para evitar erro visual de sobreposição
+                htmlBuffer += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
-                    // SE minUnlocked for falso, adiciona 'disabled' e muda a cor
                     const disabledAttr = minUnlocked ? '' : 'disabled';
                     const bgClass = minUnlocked ? 'bg-white' : 'bg-gray-100 text-gray-400 cursor-not-allowed';
 
-                    tbody.innerHTML += `
+                    htmlBuffer += `
                         <tr class="border-b hover:bg-blue-50 transition-colors">
                             <td class="px-4 py-3 align-middle">
                                 <div class="text-sm font-medium text-gray-800 leading-tight">${p.descricao}</div>
@@ -960,6 +961,9 @@
                     `;
                 });
             }
+            
+            // Desenha tudo de uma vez (Milissegundos ao invés de segundos)
+            tbody.innerHTML = htmlBuffer;
             if(window.lucide) lucide.createIcons();
         }
 
@@ -976,18 +980,20 @@
 
         function renderOrderTable() {
             const tbody = document.getElementById('order-table-body');
-            tbody.innerHTML = '';
             const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
             const grouped = groupProducts(list);
+            
+            // OTIMIZAÇÃO AQUI TAMBÉM
+            let htmlBuffer = '';
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                // CORRIGIDO: Removido 'sticky top-10' para evitar sobreposição
-                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
+                 // CORRIGIDO: Removido 'sticky top-10' para evitar erro visual de sobreposição
+                htmlBuffer += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
                     const sug = Math.max(0, p.minimo - p.estoque);
                     const highlight = sug > 0 ? "bg-red-50" : "";
                     
-                    tbody.innerHTML += `
+                    htmlBuffer += `
                         <tr class="border-b hover:bg-blue-50 transition-colors ${highlight}">
                             <td class="px-4 py-3 align-middle">
                                 <div class="text-sm font-medium text-gray-800 leading-tight">${p.descricao}</div>
@@ -1001,6 +1007,8 @@
                     `;
                 });
             }
+            
+            tbody.innerHTML = htmlBuffer;
         }
 
         window.reviewOrder = () => {
@@ -1073,7 +1081,6 @@
         
         window.logout = () => {
             window.selectedFilial = null;
-            // Bloqueia de novo ao sair
             minUnlocked = false; 
             const btn = document.getElementById('btn-unlock');
             if(btn) {
