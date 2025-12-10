@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Pedidos OdontoCompany (Online)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide-icons"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -827,7 +827,7 @@
                     `;
                     list.appendChild(div);
                 });
-                lucide.createIcons();
+                if(window.lucide) lucide.createIcons();
                 goToPage('page-history-clinic');
                 
                 window.tempHistory = querySnapshot.docs.map(d => ({id: d.id, data: d.data()}));
@@ -886,7 +886,7 @@
                     `;
                     container.appendChild(div);
                 });
-                lucide.createIcons();
+                if(window.lucide) lucide.createIcons();
             } catch (error) {
                 showAlert("Erro ao carregar pedidos: " + error.message);
             }
@@ -941,7 +941,7 @@
                     `;
                 });
             }
-            lucide.createIcons();
+            if(window.lucide) lucide.createIcons();
         }
 
         window.updateLocalProduct = (desc, field, val) => {
