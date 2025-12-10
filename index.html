@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Pedidos OdontoCompany (Online)</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <style>
         body { font-family: 'Inter', sans-serif; }
@@ -936,7 +936,8 @@
             const grouped = groupProducts(list);
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider sticky top-10">${cat}</td></tr>`;
+                // CORRIGIDO: Removido 'sticky top-10' para evitar sobreposição
+                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
                     // SE minUnlocked for falso, adiciona 'disabled' e muda a cor
                     const disabledAttr = minUnlocked ? '' : 'disabled';
@@ -980,7 +981,8 @@
             const grouped = groupProducts(list);
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider sticky top-10">${cat}</td></tr>`;
+                // CORRIGIDO: Removido 'sticky top-10' para evitar sobreposição
+                tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
                     const sug = Math.max(0, p.minimo - p.estoque);
                     const highlight = sug > 0 ? "bg-red-50" : "";
