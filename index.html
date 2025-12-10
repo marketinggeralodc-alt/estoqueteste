@@ -188,6 +188,11 @@
                     <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-5 h-5"></i>
                     <input type="text" id="stock-search" onkeyup="filterTable('stock-search', 'stock-table-body')" placeholder="Buscar produto..." class="w-full pl-10 p-2 border rounded-lg">
                 </div>
+                
+                <button onclick="unlockMinimums()" id="btn-unlock" class="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-gray-300 transition-colors" title="Destravar Mínimos">
+                    <i data-lucide="lock" class="w-4 h-4"></i> <span class="hidden md:inline">Mínimos</span>
+                </button>
+
                 <button onclick="openAddProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-green-700">
                     <i data-lucide="plus" class="w-4 h-4"></i> Novo
                 </button>
@@ -345,13 +350,15 @@
         const db = getFirestore(app);
 
         // --- VARIÁVEIS ---
-        window.selectedFilial = localStorage.getItem('lastFilial') || null; // Tenta recuperar do storage para evitar perda ao atualizar
+        window.selectedFilial = localStorage.getItem('lastFilial') || null; 
         let filialInventory = {};
         window.currentOrder = {};
         window.currentExtraItems = "";
+        let minUnlocked = false; // ESTADO: Controla se os mínimos podem ser editados
         
         const FILIAL_PASSWORDS = { 'Patos de Minas': '123', 'São Gotardo': '123', 'Ibiá': '123', 'Guarda dos Ferreiros': '123' };
         const ADMIN_PASSWORD = 'admin123';
+        const MASTER_PASSWORD = 'master'; // SENHA PARA ALTERAR MÍNIMOS
 
         // CATÁLOGO
         const INITIAL_CATALOG = {
@@ -740,7 +747,7 @@
             showLoading(false);
         }
 
-        // 3. Enviar Pedido (CORRIGIDO PARA IR AO HISTÓRICO)
+        // 3. Enviar Pedido
         window.submitOrder = async () => {
             if(!selectedFilial) {
                 showAlert("Erro crítico: Nenhuma filial selecionada. Faça login novamente.");
@@ -759,27 +766,17 @@
             };
             
             try {
-                // Salva o pedido
                 await addDoc(collection(db, "pedidos"), order);
-                
-                // Limpa o pedido atual para não duplicar se o usuário voltar
                 window.currentOrder = {};
                 window.currentExtraItems = "";
                 document.getElementById('extra-items-textarea').value = "";
-
                 showAlert("Pedido enviado com sucesso!");
-                
-                // Carrega o histórico e redireciona (Isso corrige o bug de não sair da tela)
                 await renderClinicHistory(); 
-
             } catch (error) {
                 console.error("Erro no envio:", error);
-                
-                // Verifica se é erro de índice (comum ao usar where e orderBy juntos)
                 if(error.message.includes("index")) {
                     alert("ATENÇÃO: É necessário criar um índice no Firebase. Abra o console do navegador (F12) e clique no link fornecido pelo erro.");
                 }
-
                 showAlert("Erro no envio: " + error.message);
             } finally {
                 showLoading(false);
@@ -829,9 +826,7 @@
                 });
                 if(window.lucide) lucide.createIcons();
                 goToPage('page-history-clinic');
-                
                 window.tempHistory = querySnapshot.docs.map(d => ({id: d.id, data: d.data()}));
-
             } catch (error) {
                 console.error(error);
                 if(error.message.includes("index")) {
@@ -845,9 +840,7 @@
 
         window.printOrderFromHistory = (id) => {
             const orderObj = window.tempHistory.find(o => o.id === id);
-            if(orderObj) {
-                printOrder(orderObj.data.items, orderObj.data.extraItems, orderObj.data.createdAt);
-            }
+            if(orderObj) printOrder(orderObj.data.items, orderObj.data.extraItems, orderObj.data.createdAt);
         }
 
         // 5. Admin Panel
@@ -919,6 +912,23 @@
             return grouped;
         }
 
+        // --- FUNÇÃO PARA DESTRAVAR MÍNIMOS ---
+        window.unlockMinimums = () => {
+            const pwd = prompt("Digite a Senha Mestra para alterar os mínimos:");
+            if (pwd === MASTER_PASSWORD) {
+                minUnlocked = true;
+                showAlert("Mínimos desbloqueados!");
+                renderStockTable(); // Atualiza a tabela para habilitar os inputs
+                
+                // Muda a cor do botão para mostrar que está desbloqueado
+                const btn = document.getElementById('btn-unlock');
+                btn.classList.remove('bg-gray-200', 'text-gray-600');
+                btn.classList.add('bg-green-200', 'text-green-800');
+            } else if (pwd !== null) {
+                showAlert("Senha incorreta!");
+            }
+        }
+
         function renderStockTable() {
             const tbody = document.getElementById('stock-table-body');
             tbody.innerHTML = '';
@@ -928,14 +938,22 @@
             for (const [cat, prods] of Object.entries(grouped).sort()) {
                 tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider sticky top-10">${cat}</td></tr>`;
                 prods.forEach(p => {
+                    // SE minUnlocked for falso, adiciona 'disabled' e muda a cor
+                    const disabledAttr = minUnlocked ? '' : 'disabled';
+                    const bgClass = minUnlocked ? 'bg-white' : 'bg-gray-100 text-gray-400 cursor-not-allowed';
+
                     tbody.innerHTML += `
                         <tr class="border-b hover:bg-blue-50 transition-colors">
                             <td class="px-4 py-3 align-middle">
                                 <div class="text-sm font-medium text-gray-800 leading-tight">${p.descricao}</div>
                                 <div class="text-[10px] text-gray-400 mt-0.5">${p.marca}</div>
                             </td>
-                            <td class="text-center align-middle p-1"><input type="number" class="w-14 h-8 border rounded text-center text-sm outline-none focus:border-blue-500" value="${p.minimo}" onchange="updateLocalProduct('${p.descricao}', 'minimo', this.value)"></td>
-                            <td class="text-center align-middle p-1"><input type="number" class="w-14 h-8 border rounded text-center text-sm font-bold text-blue-600 outline-none focus:border-blue-500" value="${p.estoque}" onchange="updateLocalProduct('${p.descricao}', 'estoque', this.value)"></td>
+                            <td class="text-center align-middle p-1">
+                                <input type="number" ${disabledAttr} class="w-14 h-8 border rounded text-center text-sm outline-none focus:border-blue-500 ${bgClass}" value="${p.minimo}" onchange="updateLocalProduct('${p.descricao}', 'minimo', this.value)">
+                            </td>
+                            <td class="text-center align-middle p-1">
+                                <input type="number" class="w-14 h-8 border rounded text-center text-sm font-bold text-blue-600 outline-none focus:border-blue-500 bg-white" value="${p.estoque}" onchange="updateLocalProduct('${p.descricao}', 'estoque', this.value)">
+                            </td>
                             <td class="text-center align-middle"><button class="text-red-300 hover:text-red-600 p-2" onclick="removeProduct('${p.descricao}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
                         </tr>
                     `;
@@ -1019,7 +1037,7 @@
         // --- LOGINS E SENHAS ---
         window.goToLogin = (f) => { 
             selectedFilial = f;
-            localStorage.setItem('lastFilial', f); // Persistência básica
+            localStorage.setItem('lastFilial', f); 
             document.getElementById('login-filial-name').innerText = f; 
             document.getElementById('filial-password').value = '';
             goToPage('page-login'); 
@@ -1053,6 +1071,14 @@
         
         window.logout = () => {
             window.selectedFilial = null;
+            // Bloqueia de novo ao sair
+            minUnlocked = false; 
+            const btn = document.getElementById('btn-unlock');
+            if(btn) {
+                btn.classList.add('bg-gray-200', 'text-gray-600');
+                btn.classList.remove('bg-green-200', 'text-green-800');
+            }
+
             localStorage.removeItem('lastFilial');
             document.getElementById('filial-password').value = '';
             document.getElementById('admin-password').value = '';
