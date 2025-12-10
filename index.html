@@ -159,7 +159,7 @@
                         <i data-lucide="shopping-cart" class="h-8 w-8 text-green-600"></i>
                     </div>
                     <h2 class="text-xl font-bold text-gray-800 mb-1">Novo Pedido</h2>
-                    <p class="text-sm text-gray-500 mb-4">Gerar pedido automático.</p>
+                    <p class="text-sm text-gray-500 mb-4">Gere pedidos automáticos.</p>
                     <button class="w-full text-green-600 font-semibold bg-green-50 py-2 rounded-lg">Acessar</button>
                 </div>
 
@@ -345,7 +345,7 @@
         const db = getFirestore(app);
 
         // --- VARIÁVEIS ---
-        window.selectedFilial = null;
+        window.selectedFilial = localStorage.getItem('lastFilial') || null; // Tenta recuperar do storage para evitar perda ao atualizar
         let filialInventory = {};
         window.currentOrder = {};
         window.currentExtraItems = "";
@@ -683,7 +683,7 @@
             const box = document.getElementById('alert-box');
             document.getElementById('alert-message').textContent = msg;
             box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 3000);
+            setTimeout(() => box.classList.add('hidden'), 5000); // 5 segundos
         }
 
         window.goToPage = (pageId) => {
@@ -722,7 +722,7 @@
                 }
             } catch (error) {
                 console.error(error);
-                showAlert("Erro de conexão.");
+                showAlert("Erro: " + error.message);
             }
             showLoading(false);
         }
@@ -735,13 +735,17 @@
                 showAlert("Salvo com sucesso!");
                 goToPage('page-menu');
             } catch (error) {
-                showAlert("Erro ao salvar.");
+                showAlert("Erro ao salvar: " + error.message);
             }
             showLoading(false);
         }
 
-        // 3. Enviar Pedido
+        // 3. Enviar Pedido (CORRIGIDO E DEBUG)
         window.submitOrder = async () => {
+            if(!selectedFilial) {
+                showAlert("Erro crítico: Nenhuma filial selecionada. Faça login novamente.");
+                return;
+            }
             if(Object.keys(currentOrder).length === 0 && !currentExtraItems) return showAlert("Pedido vazio!");
 
             showLoading(true);
@@ -756,22 +760,22 @@
             
             try {
                 await addDoc(collection(db, "pedidos"), order);
-                showAlert("Pedido enviado!");
+                showAlert("Pedido enviado com sucesso!");
                 goToPage('page-menu');
             } catch (error) {
-                showAlert("Erro ao enviar.");
+                console.error("Erro no envio:", error);
+                showAlert("Erro no envio: " + error.message + " (Verifique as Regras no Firebase)");
             }
             showLoading(false);
         }
 
-        // 4. Histórico da Clínica (NOVO)
+        // 4. Histórico da Clínica
         window.renderClinicHistory = async () => {
             showLoading(true);
             const list = document.getElementById('clinic-history-list');
             list.innerHTML = '';
             
             try {
-                // Filtra APENAS os pedidos da filial logada
                 const q = query(collection(db, "pedidos"), where("filial", "==", selectedFilial), orderBy("timestamp", "desc"));
                 const querySnapshot = await getDocs(q);
                 
@@ -783,7 +787,6 @@
                     const order = doc.data();
                     const div = document.createElement('div');
                     
-                    // Definição de cores baseada no status
                     let statusClass = "bg-yellow-100 text-yellow-800 border-yellow-200";
                     let icon = "clock";
                     if(order.status === 'Aprovado') { statusClass = "bg-green-100 text-green-800 border-green-200"; icon = "check-circle"; }
@@ -810,17 +813,15 @@
                 lucide.createIcons();
                 goToPage('page-history-clinic');
                 
-                // Armazena temporariamente os pedidos para impressão sem recarregar banco
                 window.tempHistory = querySnapshot.docs.map(d => ({id: d.id, data: d.data()}));
 
             } catch (error) {
                 console.error(error);
-                showAlert("Erro ao carregar histórico.");
+                showAlert("Erro ao carregar histórico: " + error.message);
             }
             showLoading(false);
         }
 
-        // Função auxiliar para imprimir direto do histórico
         window.printOrderFromHistory = (id) => {
             const orderObj = window.tempHistory.find(o => o.id === id);
             if(orderObj) {
@@ -866,7 +867,7 @@
                 });
                 lucide.createIcons();
             } catch (error) {
-                showAlert("Erro ao carregar pedidos.");
+                showAlert("Erro ao carregar pedidos: " + error.message);
             }
 
             document.getElementById('no-pending-orders').style.display = hasOrders ? 'none' : 'block';
@@ -880,7 +881,7 @@
                 showAlert(`Pedido ${newStatus}!`);
                 loadAdminPanel();
             } catch (error) {
-                showAlert("Erro ao atualizar status.");
+                showAlert("Erro ao atualizar status: " + error.message);
             }
             showLoading(false);
         }
@@ -943,7 +944,6 @@
                 tbody.innerHTML += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider sticky top-10">${cat}</td></tr>`;
                 prods.forEach(p => {
                     const sug = Math.max(0, p.minimo - p.estoque);
-                    // Só destaca linha se tiver sugestão > 0
                     const highlight = sug > 0 ? "bg-red-50" : "";
                     
                     tbody.innerHTML += `
@@ -995,14 +995,13 @@
             });
         }
         
-        // --- LOGINS E SENHAS (AJUSTADO) ---
+        // --- LOGINS E SENHAS ---
         window.goToLogin = (f) => { 
-            selectedFilial = f; 
+            selectedFilial = f;
+            localStorage.setItem('lastFilial', f); // Persistência básica
             document.getElementById('login-filial-name').innerText = f; 
-            // Limpa senha ao entrar na tela
             document.getElementById('filial-password').value = '';
             goToPage('page-login'); 
-            // Foca no input
             setTimeout(() => document.getElementById('filial-password').focus(), 100);
         }
 
@@ -1017,7 +1016,6 @@
         }
 
         window.goToAdminLogin = () => {
-            // Limpa senha
             document.getElementById('admin-password').value = '';
             goToPage('page-admin-login'); 
             setTimeout(() => document.getElementById('admin-password').focus(), 100);
@@ -1033,14 +1031,13 @@
         }
         
         window.logout = () => {
-            // Limpa variáveis sensíveis
             window.selectedFilial = null;
+            localStorage.removeItem('lastFilial');
             document.getElementById('filial-password').value = '';
             document.getElementById('admin-password').value = '';
             goToPage('page-select-filial');
         }
         
-        // Configuração do Enter nos Inputs de Senha
         document.getElementById('filial-password').addEventListener('keyup', (e) => {
             if(e.key === 'Enter') handleFilialLogin();
         });
@@ -1062,11 +1059,10 @@
                 <div class="print-grid">
             `;
             
-            // Cria a grade de itens
             for(const [k,v] of Object.entries(items)) {
                 html += `<div class="print-item"><span>${k}</span><span>${v}</span></div>`;
             }
-            html += `</div>`; // fecha grid
+            html += `</div>`; 
 
             if(extras) {
                 html += `<div class="print-extras"><strong>Observações:</strong><br>${extras}</div>`;
