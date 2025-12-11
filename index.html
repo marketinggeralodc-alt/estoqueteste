@@ -4,7 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Controle de Pedidos OdontoCompany (Online)</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    
     <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 
     <style>
@@ -16,49 +18,21 @@
         .status-aprovado { background-color: #dcfce7; border-left-color: #22c55e; }
         .status-rejeitado { background-color: #fee2e2; border-left-color: #ef4444; }
         
-        /* IMPRESSÃO OTIMIZADA E LIMPA */
+        /* IMPRESSÃO OTIMIZADA */
         @media print {
             body > * { display: none !important; }
             #print-area, #print-area * { display: block !important; visibility: visible !important; }
             #print-area { 
-                position: absolute; 
-                left: 0; 
-                top: 0; 
-                width: 100%; 
-                color: #000; 
-                background: white;
-                padding: 10px;
+                position: absolute; left: 0; top: 0; width: 100%; 
+                color: #000; background: white; padding: 10px;
             }
-            .print-header { 
-                text-align: center; 
-                border-bottom: 2px solid #000; 
-                margin-bottom: 10px; 
-                padding-bottom: 5px;
-            }
-            .print-title { font-size: 18px; font-weight: bold; text-transform: uppercase; }
-            .print-meta { font-size: 12px; color: #333; }
-            
-            /* Grid para economizar papel */
             .print-grid {
-                display: grid;
-                grid-template-columns: 1fr 1fr; /* Duas colunas */
-                gap: 5px 20px;
-                font-size: 11px; /* Fonte menor */
+                display: grid; grid-template-columns: 1fr 1fr; 
+                gap: 5px 20px; font-size: 11px;
             }
             .print-item {
-                display: flex;
-                justify-content: space-between;
-                border-bottom: 1px dashed #ccc;
-                padding: 2px 0;
-            }
-            .print-item span:first-child { font-weight: 500; }
-            .print-item span:last-child { font-weight: bold; }
-            
-            .print-extras {
-                margin-top: 15px;
-                border: 1px solid #999;
-                padding: 5px;
-                font-size: 11px;
+                display: flex; justify-content: space-between; 
+                border-bottom: 1px dashed #ccc; padding: 2px 0;
             }
             .no-print { display: none !important; }
         }
@@ -80,20 +54,16 @@
                 </p>
                 <div class="space-y-3">
                     <button onclick="goToLogin('Patos de Minas')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
-                        <span>Patos de Minas</span>
-                        <i data-lucide="chevron-right" class="text-gray-400 group-hover:text-blue-500"></i>
+                        <span>Patos de Minas</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
                     </button>
                     <button onclick="goToLogin('São Gotardo')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
-                        <span>São Gotardo</span>
-                        <i data-lucide="chevron-right" class="text-gray-400 group-hover:text-blue-500"></i>
+                        <span>São Gotardo</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
                     </button>
                     <button onclick="goToLogin('Ibiá')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
-                        <span>Ibiá</span>
-                        <i data-lucide="chevron-right" class="text-gray-400 group-hover:text-blue-500"></i>
+                        <span>Ibiá</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
                     </button>
                     <button onclick="goToLogin('Guarda dos Ferreiros')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
-                        <span>Guarda dos Ferreiros</span>
-                        <i data-lucide="chevron-right" class="text-gray-400 group-hover:text-blue-500"></i>
+                        <span>Guarda dos Ferreiros</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
                     </button>
                 </div>
                 <div class="text-center mt-8 pt-4 border-t">
@@ -108,28 +78,20 @@
             <div class="w-full max-w-sm bg-white rounded-lg shadow-xl p-8">
                 <button onclick="logout()" class="text-gray-500 hover:text-blue-600 mb-4 flex items-center text-sm"><i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Voltar</button>
                 <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="user" class="w-8 h-8 text-blue-600"></i>
-                    </div>
                     <h2 class="text-xl font-bold text-gray-800">Login</h2>
                     <p class="text-blue-600 font-medium" id="login-filial-name">...</p>
                 </div>
-                <input type="password" id="filial-password" placeholder="Digite a senha" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 focus:ring-2 focus:ring-blue-500 outline-none">
-                <button onclick="handleFilialLogin()" class="w-full text-lg text-white bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-bold shadow-md transition-colors">Entrar</button>
+                <input type="password" id="filial-password" placeholder="Digite a senha" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="handleFilialLogin()" class="w-full text-lg text-white bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-bold shadow-md mt-4">Entrar</button>
             </div>
         </div>
         
         <div id="page-admin-login" class="page flex flex-col items-center justify-center min-h-screen p-4">
             <div class="w-full max-w-sm bg-white rounded-lg shadow-xl p-8 border-t-4 border-red-500">
                 <button onclick="logout()" class="text-gray-500 hover:text-blue-600 mb-4 flex items-center text-sm"><i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Voltar</button>
-                <div class="text-center mb-6">
-                    <div class="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3">
-                        <i data-lucide="shield" class="w-8 h-8 text-red-600"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800">Administrador</h2>
-                </div>
-                <input type="password" id="admin-password" placeholder="Senha Mestre" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 focus:ring-2 focus:ring-red-500 outline-none">
-                <button onclick="handleAdminLogin()" class="w-full text-lg text-white bg-red-600 hover:bg-red-700 py-3 px-4 rounded-lg font-bold shadow-md transition-colors">Acessar Painel</button>
+                <h2 class="text-xl font-bold text-center text-gray-800 mb-6">Administrador</h2>
+                <input type="password" id="admin-password" placeholder="Senha Mestre" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 outline-none focus:ring-2 focus:ring-red-500">
+                <button onclick="handleAdminLogin()" class="w-full text-lg text-white bg-red-600 hover:bg-red-700 py-3 px-4 rounded-lg font-bold shadow-md">Acessar Painel</button>
             </div>
         </div>
 
@@ -146,32 +108,19 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div onclick="goToPage('page-manage-stock')" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-blue-300 border border-transparent transition-all">
-                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4">
-                        <i data-lucide="package" class="h-8 w-8 text-blue-600"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-1">Meu Estoque</h2>
-                    <p class="text-sm text-gray-500 mb-4">Atualize a contagem e mínimos.</p>
-                    <button class="w-full text-blue-600 font-semibold bg-blue-50 py-2 rounded-lg">Acessar</button>
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4"><i data-lucide="package" class="h-8 w-8 text-blue-600"></i></div>
+                    <h2 class="text-xl font-bold text-gray-800">Meu Estoque</h2>
+                    <p class="text-sm text-gray-500">Atualize a contagem.</p>
                 </div>
-
                 <div onclick="goToPage('page-order-form')" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-green-300 border border-transparent transition-all">
-                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                        <i data-lucide="shopping-cart" class="h-8 w-8 text-green-600"></i>
-                    </div>
-                    <h2 class="text-xl font-bold text-gray-800 mb-1">Novo Pedido</h2>
-                    <p class="text-sm text-gray-500 mb-4">Gere pedidos automáticos.</p>
-                    <button class="w-full text-green-600 font-semibold bg-green-50 py-2 rounded-lg">Acessar</button>
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"><i data-lucide="shopping-cart" class="h-8 w-8 text-green-600"></i></div>
+                    <h2 class="text-xl font-bold text-gray-800">Novo Pedido</h2>
+                    <p class="text-sm text-gray-500">Gere pedidos.</p>
                 </div>
-
                 <div onclick="renderClinicHistory()" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-purple-300 border border-transparent transition-all md:col-span-2">
                     <div class="flex items-center gap-4 mb-2">
-                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center">
-                            <i data-lucide="history" class="h-6 w-6 text-purple-600"></i>
-                        </div>
-                        <div class="text-left">
-                            <h2 class="text-xl font-bold text-gray-800">Meus Pedidos</h2>
-                            <p class="text-sm text-gray-500">Veja o status dos envios anteriores.</p>
-                        </div>
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center"><i data-lucide="history" class="h-6 w-6 text-purple-600"></i></div>
+                        <div><h2 class="text-xl font-bold text-gray-800">Meus Pedidos</h2><p class="text-sm text-gray-500">Histórico de envios.</p></div>
                     </div>
                 </div>
             </div>
@@ -188,11 +137,9 @@
                     <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-5 h-5"></i>
                     <input type="text" id="stock-search" onkeyup="filterTable('stock-search', 'stock-table-body')" placeholder="Buscar produto..." class="w-full pl-10 p-2 border rounded-lg">
                 </div>
-                
-                <button onclick="unlockMinimums()" id="btn-unlock" class="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-gray-300 transition-colors" title="Destravar Mínimos">
+                <button onclick="unlockMinimums()" id="btn-unlock" class="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-gray-300 transition-colors">
                     <i data-lucide="lock" class="w-4 h-4"></i> <span class="hidden md:inline">Mínimos</span>
                 </button>
-
                 <button onclick="openAddProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-green-700">
                     <i data-lucide="plus" class="w-4 h-4"></i> Novo
                 </button>
@@ -203,12 +150,12 @@
 
             <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100 max-h-[65vh]">
                 <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 sticky top-0 z-10">
+                    <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Produto</th>
-                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20">Mín</th>
-                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20">Atual</th>
-                            <th class="px-2 py-3 text-center w-10"></th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">Produto</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20 bg-gray-50">Mín</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20 bg-gray-50">Atual</th>
+                            <th class="px-2 py-3 text-center w-10 bg-gray-50"></th>
                         </tr>
                     </thead>
                     <tbody id="stock-table-body" class="divide-y divide-gray-100"></tbody>
@@ -229,13 +176,13 @@
 
             <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100 max-h-[50vh] mb-6">
                 <table class="w-full text-left border-collapse">
-                    <thead class="bg-gray-50 sticky top-0 z-10">
+                    <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
                         <tr>
-                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider">Produto</th>
-                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16">Mín</th>
-                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16">Est.</th>
-                            <th class="px-2 py-3 text-center text-xs font-bold text-red-500 uppercase w-16">Sug.</th>
-                            <th class="px-4 py-3 text-center text-xs font-bold text-green-600 uppercase w-24">Qtd</th>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">Produto</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16 bg-gray-50">Mín</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16 bg-gray-50">Est.</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-red-500 uppercase w-16 bg-gray-50">Sug.</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-green-600 uppercase w-24 bg-gray-50">Qtd</th>
                         </tr>
                     </thead>
                     <tbody id="order-table-body" class="divide-y divide-gray-100"></tbody>
@@ -244,7 +191,7 @@
 
             <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Observações / Extras</label>
-                <textarea id="extra-items-textarea" rows="3" class="w-full border border-gray-300 rounded-lg p-3 focus:ring-2 focus:ring-blue-500 outline-none" placeholder="Digite aqui itens que não estão na lista..."></textarea>
+                <textarea id="extra-items-textarea" rows="3" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite aqui itens que não estão na lista..."></textarea>
             </div>
 
             <button onclick="reviewOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex justify-center items-center gap-2">
@@ -254,7 +201,6 @@
 
         <div id="page-review-order" class="page container mx-auto p-4 max-w-3xl">
             <button onclick="goToPage('page-order-form')" class="mb-6 text-gray-600 hover:text-blue-600 font-semibold flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar e Editar</button>
-            
             <div class="bg-white rounded-xl shadow-lg overflow-hidden">
                 <div class="bg-gray-50 p-6 border-b text-center">
                     <h1 class="text-2xl font-bold text-gray-800">Resumo do Pedido</h1>
@@ -290,6 +236,9 @@
                     </div>
                 </div>
                 <div class="flex gap-3">
+                    <button onclick="resetStockToCatalog()" class="text-yellow-600 bg-yellow-50 hover:bg-yellow-100 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-yellow-200">
+                         <i data-lucide="database" class="w-4 h-4"></i> Resetar Estoque (Lista Nova)
+                    </button>
                     <button onclick="refreshAdminPanel()" class="text-blue-600 bg-blue-50 hover:bg-blue-100 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                          <i data-lucide="refresh-cw" class="w-4 h-4"></i> Atualizar
                     </button>
@@ -334,7 +283,7 @@
 
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, getDocs, updateDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
 
         // --- CONFIGURAÇÃO ---
         const firebaseConfig = {
@@ -360,214 +309,110 @@
         const ADMIN_PASSWORD = 'admin123';
         const MASTER_PASSWORD = 'master'; 
 
-        // CATÁLOGO
+        // CATÁLOGO ATUALIZADO (BASEADO NA SUA PLANILHA NOVA)
         const INITIAL_CATALOG = {
-            "AGULHA CURTA": { cat: "CIRURGIA", marca: "ALLPRIME", min: 2 },
-            "AGULHA LONGA": { cat: "CIRURGIA", marca: "ALLPRIME", min: 1 },
-            "ALPHACAINA": { cat: "CIRURGIA", marca: "DFL", min: 4 },
-            "ANESTÉSICO ARTICAINE": { cat: "CIRURGIA", marca: "DFL", min: 3 },
-            "BENSONTOP": { cat: "CIRURGIA", marca: "DFL", min: 3 },
-            "FIO DE SUTURA 3-0 NLON": { cat: "CIRURGIA", marca: "PROCARE", min: 4 },
-            "FIO DE SUTURA 4-0 NYLON": { cat: "CIRURGIA", marca: "PROCARE", min: 2 },
-            "HEMOLIQ": { cat: "CIRURGIA", marca: "MAQUIRA", min: 2 },
-            "HEMOSPON - ESPONJA HEMOSTÁTICA": { cat: "CIRURGIA", marca: "MAQUIRA", min: 4 },
-            "LÂMINA DE BISTURI Nº12": { cat: "CIRURGIA", marca: "SOLIDOR", min: 2 },
-            "LÂMINA DE BISTURI Nº15": { cat: "CIRURGIA", marca: "SOLIDOR", min: 3 },
-            "LUVA CIRURGICA 7,5": { cat: "CIRURGIA", marca: "DESCARPAK", min: 20 },
-            "LUVA CIRURGICA ESTÉRIL 6,5": { cat: "CIRURGIA", marca: "DESCARPAK", min: 30 },
-            "MEPVACAINE S/ VASO CONSTRICTOR": { cat: "CIRURGIA", marca: "DFL", min: 1 },
-            "PLACA MOLDEIRA 1MM": { cat: "CIRURGIA", marca: "VILLEVIE", min: 4 },
-            "SUGADOR CIRURGICO (CAIXA)": { cat: "CIRURGIA", marca: "MAQUIRA", min: 3 },
-            "PASTA DE POLIMENTO DIAMOND": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
-            "Resina FORMA A 2d": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
-            "Resina Z250 - 3,5": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "Resina Z250 - B1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "SISTEMA ADESIVO AUTOCOND. TAMPA VERMELHA": { cat: "DENTÍSTICA", marca: "AMBAR", min: 1 },
-            "Acido Fluorídrico": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 6 },
-            "Acido Fosfórico": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 20 },
+            "Ácido Fluorídrico": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 2 },
+            "Ácido Fosfórico 37%": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 7 },
             "Acrílica AltoPolimerizante 61": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
             "Acrílica AltoPolimerizante 62": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
             "Acrílica AltoPolimerizante 66": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
             "Acrílica AltoPolimerizante 69": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
-            "Adesivo bond 2.1": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 4 },
-            "Adesivo MONO ADAPER SINGLE BOND 3 M": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Banda Metálica 0,5": { cat: "DENTÍSTICA", marca: "PREVEN", min: 5 },
-            "Banda Metálica 0,7": { cat: "DENTÍSTICA", marca: "PREVEN", min: 4 },
-            "Bicarbonato": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 1 },
-            "BROCA ZECRYA": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 6 },
-            "Carbono para ajuste de oclusão": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 8 },
-            "Cartão de Raio X": { cat: "DENTÍSTICA", marca: "PREVEN", min: 1 },
-            "Cera 7": { cat: "DENTÍSTICA", marca: "LYSANDA", min: 2 },
-            "Cera Utilidade Vermelha": { cat: "DENTÍSTICA", marca: "LYSANDA", min: 2 },
-            "Cimento Resinoso DUAL": { cat: "DENTÍSTICA", marca: "VIGODENT", min: 3 },
-            "CLAREAMENTO CASEIRO 16%": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
-            "CLAREAMENTO CASEIRO 22%": { cat: "DENTÍSTICA", marca: "FGM", min: 4 },
-            "Clareamento Consultório - HP": { cat: "DENTÍSTICA", marca: "FGM", min: 2 },
-            "Cunha de madeira": { cat: "DENTÍSTICA", marca: "TDV", min: 2 },
-            "RESINA AUTO ROSA": { cat: "DENTÍSTICA", marca: "DENCRILAY", min: 2 },
-            "DISCO DE LIXA soft-lex pop-on": { cat: "DENTÍSTICA", marca: "3M", min: 1 },
-            "Escova de Robson": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 30 },
-            "Filme Adulto": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
-            "Filme Infantil": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
-            "Fio dental": { cat: "DENTÍSTICA", marca: "HILLO", min: 2 },
-            "Flúor": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 2 },
-            "Gel dessensibilizante": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
-            "Hydcal- hidroxido de calcio": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 2 },
-            "Ionomero de vidro po/liquido": { cat: "DENTÍSTICA", marca: "FGM", min: 2 },
-            "Lixa Abrasiva de Metal": { cat: "DENTÍSTICA", marca: "INJECTA", min: 6 },
-            "Tiras de lixa de poliester abrasiva": { cat: "DENTÍSTICA", marca: "Allprime", min: 4 },
-            "Micro Brush regular": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 6 },
-            "Obturador Provisório": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 4 },
-            "Pasta de Zinco": { cat: "DENTÍSTICA", marca: "LYSANDA", min: 1 },
-            "Pasta Profilática": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
-            "PEDRA ASKANS": { cat: "DENTÍSTICA", marca: "AMERICAN BURS", min: 5 },
-            "Pedra Pomes": { cat: "DENTÍSTICA", marca: "SSWHITE", min: 1 },
-            "Pino de Fibra de Vidro 0.5": { cat: "DENTÍSTICA", marca: "SUPERPOST", min: 3 },
-            "Resina Acrílica incolor": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
-            "Resina Auto": { cat: "DENTÍSTICA", marca: "CLASSICO", min: 1 },
-            "Resina Master Flow A3,5": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 3 },
-            "RESINA MASTER FLOW A1": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 2 },
-            "RESINA FORMA A3E": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
-            "RESINA FORMA A1E": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
-            "RESINA FORMA A2E": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
-            "Resina Master Flow A2": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 3 },
-            "Resina Master Flow A3": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 3 },
-            "Resina Z 250- OA2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "Resina Z100 - A1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z100 - A2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z100 - A3": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z100 - A3.5": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z100 - A4": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z100 - B2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z250 - A1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z250 - A2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "Resina Z250 - OA1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "RESINA Z250 A3": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "Selante Yseal": { cat: "DENTÍSTICA", marca: "YLLER", min: 1 },
-            "RESINA Z250 A 3,5": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
-            "RESINA Z250 B1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "RESINA Z250 OA2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
-            "Silano": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 3 },
-            "Silicone Optozil (ACTIVADOR)": { cat: "DENTÍSTICA", marca: "KULZER", min: 5 },
-            "Silicone Optozil (DENSO)": { cat: "DENTÍSTICA", marca: "KULZER", min: 4 },
-            "Silicone Optozil (LEVE)": { cat: "DENTÍSTICA", marca: "KULZER", min: 6 },
-            "Tira de Poliéster transparente": { cat: "DENTÍSTICA", marca: "Kdent", min: 4 },
-            "Top Dam (Barreira Gengival)": { cat: "DENTÍSTICA", marca: "ALLPLAN", min: 3 },
-            "AGULHA DE IRRIGAÇÃO": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
-            "LIQUIDO ACRILICO AUTOPOLIMERALIZAVEL TDV 500 ML": { cat: "DIVERSOS", marca: "TDV", min: 1 },
-            "OLEO LUBRIFICANTE": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
-            "ALGINATO ALVAGEL": { cat: "DIVERSOS", marca: "DENTSPLY", min: 6 },
-            "ALGODAO ROLETE": { cat: "DIVERSOS", marca: "SSPLUS", min: 20 },
-            "ANESTESICO SS WHITE LIDOSTESIN": { cat: "DIVERSOS", marca: "SS WHITE", min: 8 },
-            "BABADOR": { cat: "DIVERSOS", marca: "ALL PRIME", min: 2 },
-            "COLGADURAS": { cat: "DIVERSOS", marca: "GOLGRAN", min: 5 },
-            "DESCARPACK 3L": { cat: "DIVERSOS", marca: "DESCARPACK", min: 2 },
-            "DESCARPACK 7 L": { cat: "DIVERSOS", marca: "DESCARPACK", min: 1 },
-            "GAZE HIDROFILICA": { cat: "DIVERSOS", marca: "ULTRACOTT", min: 3 },
-            "GELINHOS": { cat: "DIVERSOS", marca: "-", min: 50 },
-            "GESSO TIPO III AMARELO": { cat: "DIVERSOS", marca: "ASFER", min: 7 },
-            "GESSO TIPO IV ROSA": { cat: "DIVERSOS", marca: "VIGODENT", min: 7 },
-            "GRAU CIRURGICO 100X100": { cat: "DIVERSOS", marca: "ALLPRIME", min: 2 },
-            "GRAU CIRURGICO 20X100": { cat: "DIVERSOS", marca: "ALLPRIME", min: 2 },
-            "GRAU CIRURGICO 30X100": { cat: "DIVERSOS", marca: "ALLPRIME", min: 1 },
-            "LUVAS COM PÓ P": { cat: "DIVERSOS", marca: "-", min: 40 },
-            "MÁSCARA DESCARTÁVEL CAIXA COM 50": { cat: "DIVERSOS", marca: "SSPLUS", min: 5 },
-            "MICRO BRUSH EXTRA FINO": { cat: "DIVERSOS", marca: "ALLPRIME", min: 3 },
-            "RESINA ACRILICA POLIMERIZANTE JET PÓ ROSA 78G": { cat: "DIVERSOS", marca: "JET", min: 1 },
-            "SERINGAS 10 ML": { cat: "DIVERSOS", marca: "DESCARPAK", min: 4 },
-            "SERINGAS 20ML": { cat: "DIVERSOS", marca: "DESCARPAK", min: 4 },
-            "SOFT REEMBASADOR": { cat: "DIVERSOS", marca: "TDV", min: 2 },
-            "SUGADOR": { cat: "DIVERSOS", marca: "ALLPRIME", min: 25 },
-            "TESTE BIOLOGICO - biological test": { cat: "DIVERSOS", marca: "2l", min: 2 },
-            "TESTE QUIMICO- indicador quimico": { cat: "DIVERSOS", marca: "CLEAN UP", min: 4 },
-            "TOUCA BRANCA": { cat: "DIVERSOS", marca: "DISCARPAK", min: 2 },
-            "VASELINA SOLIDA": { cat: "DIVERSOS", marca: "RIOQUMICA", min: 1 },
-            "CLOREXIDINA 0,12%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 5 },
-            "CLOREXIDINA 2%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 1 },
-            "CONE DE GUTAPERCHA 35.05(BASSI)": { cat: "ENDODONTIA", marca: "EASYBASSI", min: 1 },
+            "Adesivo autocondicomante ": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
+            "Adesivo bond": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 4 },
+            "AGULHA CURTA": { cat: "DIVERSOS", marca: "ALLPRIME", min: 2 },
+            "AGULHA LONGA": { cat: "DIVERSOS", marca: "ALLPRIME", min: 1 },
+            "ALGINATO ALVAGEL": { cat: "DIVERSOS", marca: "DENTSPLY", min: 3 },
+            "ALGODAO ROLETE": { cat: "DIVERSOS", marca: "SSPLUS", min: 15 },
+            "ALPHACAINA": { cat: "DIVERSOS", marca: "DFL", min: 3 },
+            "ARTICAINE": { cat: "DIVERSOS", marca: "DFL", min: 2 },
+            "BABADOR": { cat: "DIVERSOS", marca: "SSPLUS", min: 3 },
+            "Banda Metálica 0,5": { cat: "DENTÍSTICA", marca: "PREVEN", min: 1 },
+            "Banda Metálica 0,7": { cat: "DENTÍSTICA", marca: "PREVEN", min: 1 },
+            "BENSONTOP - ANESTÉSICO TÓPICO": { cat: "DIVERSOS", marca: "DFL", min: 1 },
+            "Bicarbonato": { cat: "DIVERSOS", marca: "PREVEN", min: 1 },
+            "BIOLOGICAL TEST": { cat: "DIVERSOS", marca: "2l", min: 1 },
+            "BONTÃO LINGUAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "BRAQUETE AUTO LIGADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "broca 1014": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "broca 1014 hl ": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "broca 2214  2131": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "BROCA 3118 F": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 5 },
+            "broca 3131   4137": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 3 },
+            "BROCA 3195 FF": { cat: "DENTISTICA", marca: "ALL PRIME", min: 4 },
+            "broca cirurcica  longa alta rotação 702 ": { cat: "DENTÍSTICA", marca: "MICRODONT", min: 4 },
+            "broca cirurcica  longa alta rotação 703": { cat: "DENTÍSTICA", marca: "MICRODONT", min: 4 },
+            "BROCA DE PREPARO": { cat: "DENTÍSTICA", marca: "ALLPLAN", min: 3 },
+            "BROCA ENDO Z": { cat: "ENDODONTIA", marca: "MICRODONT", min: 4 },
+            "BROCA GATES Nº 01": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA GATES Nº 02": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA GATES Nº 03": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA LARGO N 01": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "BROCA LARGO N 02": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "BROCA LARGO N 03": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "broca multilaminada ": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "CAIXA PARA GUARDAR APARELHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Carbono para ajuste de oclusão": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 3 },
+            "Cartão de Raio X": { cat: "DIVERSOS", marca: "PREVEN", min: 1 },
+            "Cera 7": { cat: "DIVERSOS", marca: "LYSANDRA", min: 1 },
+            "CERA ORTODONTICA - CARTELA POP OFF": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Cera Utilidade Vermelha": { cat: "DIVERSOS", marca: "LYSANDRA", min: 1 },
+            "CIMENTO ENDOFILL": { cat: "ENDODONTIA", marca: "DENTSPLY", min: 1 },
+            "Cimento Resinoso DUAL": { cat: "DENTÍSTICA", marca: "VIGODENT", min: 2 },
+            "Clareamento caseiro": { cat: "DENTÍSTICA", marca: "FGM", min: 20 },
+            "Clareamento Consultório - HP": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "CLOREXIDINA 0,12%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 1 },
+            "Colgadura de rx 10": { cat: "DENTÍSTICA", marca: "", min: 10 },
+            "CLOREXIDINA 2%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 4 },
             "CONE DE PAPEL 15-40": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
-            "KIT ENDO IRRIGAÇÃO ENDO": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
-            "SERINGA IRRIGAÇÃO 5ML PACOTE COM 10": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
-            "HIDROXIDO DE CALCIO P.A": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
-            "CONE DE PAPEL 25": { cat: "ENDODONTIA", marca: "MKLIFE", min: 2 },
-            "CONE DE PAPEL 45-80": { cat: "ENDODONTIA", marca: "MKLIFE", min: 2 },
-            "CONE GUTAPERCHA 45- 80": { cat: "ENDODONTIA", marca: "BASSI", min: 1 },
-            "CONE GUTAPERCHA F1": { cat: "ENDODONTIA", marca: "BASSI", min: 1 },
-            "CONE GUTAPERCHA F2": { cat: "ENDODONTIA", marca: "BASSI", min: 1 },
-            "CONE GUTAPERCHA F3 PROTAPER UNIVERSAL": { cat: "ENDODONTIA", marca: "PROTAPER", min: 1 },
-            "EDTA": { cat: "ENDODONTIA", marca: "BIODINAMIC", min: 1 },
-            "ENDOFIL PO": { cat: "ENDODONTIA", marca: "DENTSPLAY", min: 1 },
-            "ENDOFIL LIQUIDO": { cat: "ENDODONTIA", marca: "DENTSPLAY", min: 1 },
-            "EUCALIPTOL": { cat: "ENDODONTIA", marca: "BIODINAMIC", min: 1 },
-            "FIO RETRATOR 00": { cat: "ENDODONTIA", marca: "BIODINAMIC", min: 2 },
-            "FIO RETRATOR 000": { cat: "ENDODONTIA", marca: "BIODINAMIC", min: 2 },
-            "FIXADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 3 },
-            "HIPOCLORITO DE SODIO 2,5%": { cat: "ENDODONTIA", marca: "ASFER", min: 1 },
-            "HYDCAL": { cat: "ENDODONTIA", marca: "HYCAL", min: 3 },
-            "LENCOL DE BORRACHA": { cat: "ENDODONTIA", marca: "MADEITEX", min: 2 },
-            "LIMA ENDODONTICA 08 /25MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 10 /25MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 15 /25MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 15-40/25mm": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 15-40/31mm": { cat: "ENDODONTIA", marca: "ALPRIME", min: 1 },
-            "LIMA ENDODONTICA 20 /25MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 25/25 MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "LIMA ENDODONTICA 45-80/25mm": { cat: "ENDODONTIA", marca: "ALPRIME", min: 1 },
-            "LIMA ENDODONTICA 45-80/31mm": { cat: "ENDODONTIA", marca: "ALPRIME", min: 1 },
-            "LIMA K ENDODONTICA 25 MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
-            "REVELADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 3 },
-            "TESTE DE VITALIDADE - ENDOICE": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
-            "TRICRESOL": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
-            "LIMA ENDODONTICA 25 /25MM": { cat: "ENDODONTIA", marca: "ALPRIME", min: 2 },
-            "ULTRACAL": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
-            "ADESIVO ORTHOCEM": { cat: "ORTODONTIA", marca: "FGM", min: 4 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 14 SUP c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 16 INF c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 16 SUP c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 16X22 INF c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 18 INF c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 18X25 INF c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL NITI TERMOATIVO 35º 20 INF c/ 10 un": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ARCO INTRAORAL AÇO INOXIDÁVEL 45/18 c/ 10": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "BOTÃO LINGUAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "BRAQUETE AUTO LIGADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 4 },
-            "BRAQUETE AUTO LIGADO ESTETICO": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
-            "BRAQUETE CONVENCIONAL 100CASOS MORELLI SLOT 22": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "BRAQUETE ESTÉTICO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
-            "BRAQUETE MORELLI SLP 11": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "BRAQUETE MORELLI SLP 12": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "BRAQUETE MORELLI SLP 21": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "BRAQUETE MORELLI SLP 22": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
-            "CAIXA PARA APARELHO C/10": { cat: "ORTODONTIA", marca: "SSPLUS", min: 2 },
-            "CERA ORTODONTICA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "ELASTICO BENGALINA BRANCO RENDA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA AMARELO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA AZUL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA AZUL BEBÊ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA AZUL CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "ELASTICO BENGALINA AZUL MARINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA CINZA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "CONE DE PAPEL 30-45": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "CONE DE PAPEL 45-80": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "cone fm ": { cat: "ENDODONTIA", marca: "DENTSPLY", min: 1 },
+            "Cunha de madeira": { cat: "DENTÍSTICA", marca: "TDV", min: 1 },
+            "Decrilay": { cat: "DIVERSOS", marca: "DENCOR", min: 1 },
+            "DENTE DE ESTOQUE INFERIOR ANTERIOR 66": { cat: "DENTÍSTICA", marca: "POP DENT", min: 1 },
+            "DENTE DE ESTOQUE SUPERIOR INCISIVO (ANTERIOR) 66": { cat: "DENTÍSTICA", marca: "POP DENT", min: 1 },
+            "DESCARPACK - 7l": { cat: "DIVERSOS", marca: "DESCARPAC", min: 1 },
+            "DETERGENTE ENZIMATICO": { cat: "DIVERSOS", marca: "Zymedet Gold", min: 1 },
+            "EDTA": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "ELASTICO BENGALINA AMARELO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL BEBÊ ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO BENGALINA AZUL MARINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA BRANCO RENDA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA CINZA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
             "ELASTICO BENGALINA LARANJA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA LILÁS": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA PEAR BLUES": { cat: "ORTODONTIA", marca: "MORELLI", min: 4 },
-            "ELASTICO BENGALINA PINK CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA PRATEADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO BENGALINA LILÁS ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA MARFIM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA PINK CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA PRATEADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
             "ELASTICO BENGALINA PRETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
-            "ELASTICO BENGALINA ROSA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA ROSA BEBÊ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA ROSA PEROLA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA ROXO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA UVA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERDE CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERDE LIMÃO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERDE MAR": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERDE MUSGO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERDE PEROLA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERMELHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VERMELHO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINA VINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO BENGALINHA AZUL MARINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO BENGALINA ROSA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROSA BEBÊ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROSA PEROLADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROXO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA UVA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA VERDE LIMÃO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE MAR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE MUSGO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE PEROLA ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERMELHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA VERMELHO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL LEVE 1/4": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL LEVE 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL LEVE 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL LEVE 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL MÉDIO 1/4": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL MÉDIO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL MÉDIO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL MÉDIO 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL PESADO 1/4  ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL PESADO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL PESADO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL PESADO 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
             "ELÁSTICO CORRENTE AMARELO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE AMARELO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE AZUL BEBE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
@@ -584,20 +429,20 @@
             "ELÁSTICO CORRENTE CINZA MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELÁSTICO CORRENTE LARANJA CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE LARANJA  CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE LARANJA CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELÁSTICO CORRENTE LILAS CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELÁSTICO CORRENTE LILAS CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE LILAS MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELÁSTICO CORRENTE MARFIM CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
-            "ELÁSTICO CORRENTE MARFIM MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
+            "ELÁSTICO CORRENTE MARFIM CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE MARFIM MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE PEARL BLUE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE PEARL BLUE MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE PINK CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE PINK CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELÁSTICO CORRENTE PRATEADO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRATEADO CURTO ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE PRATEADO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELÁSTICO CORRENTE PRETO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "ELÁSTICO CORRENTE PRETO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELÁSTICO CORRENTE PRETO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRETO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE ROSA BEBE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE ROSA BEBE MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE ROSA PEROLA CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
@@ -620,77 +465,173 @@
             "ELÁSTICO CORRENTE VERMELHO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE VINHO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "ELÁSTICO CORRENTE VINHO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO INTRAORAL MÉDIO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "ELASTICO INTRAORAL MEDIO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO INTRAORAL PESADO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ELASTICO INTRAORAL PESADO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
-            "FIO AÇO 12 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 12 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 14 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 14 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16X16 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16X16 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16X22 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 16X22 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 17X25 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 17X25 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 18 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 18 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 18X25 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 18X25 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 19X25 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 19X25 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 20 INFERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO AÇO 20 SUPERIOR C/50 UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "FIO PRE-CONTORNADO 12 INF C/10 UND": { cat: "ORTODONTIA", marca: "ORTHOMETRIC", min: 2 },
-            "FIO PRE-CONTORNADO 16 INF C/10 UND": { cat: "ORTODONTIA", marca: "ORTHOMETRIC", min: 2 },
-            "FIO DE AMARILHO 0,25 MM": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO DE AMARILHO 0,30 MM": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO DE AMARILHO 0,35 MM": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
-            "FIO DE AMARILHO 0,40 MM": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
-            "FIO DE AMARILHO 0,45 MM": { cat: "ORTODONTIA", marca: "MORELLI", min: 0 },
-            "FIO NITI 12 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 12 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 14 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 14 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 16 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 16 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 16X16 SUPERIOR 50UN": { cat: "ORTODONTIA", marca: "ORTHOMETRIC", min: 1 },
-            "FIO NITI 16X16 INFERIOR 50UN": { cat: "ORTODONTIA", marca: "ORTHOMETRIC", min: 1 },
-            "FIO NITI 16X22 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 16X22 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 17X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 17X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 18 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 18 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 18X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 19X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 18X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "ORTHOMETRIC", min: 1 },
-            "FIO NITI 20 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "FIO NITI 20 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "GANCHO PONTA BOLA RETO LONGO": { cat: "ORTODONTIA", marca: "MORELLI", min: 5 },
+            "ELASTICO INTRAORAL MÉDIO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO ROTATION": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "EMBALAGEM PARA ELASTICO": { cat: "ORTODONTIA", marca: "MAQUIRA", min: 2 },
+            "Escova de Robson": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 40 },
+            "EXTRATOR DE ELASTICO 10": { cat: "ORTODONTIA", marca: "", min: 10 },
+            "ESLASTICO CORRENTE CINZA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ESLASTICO CORRENTE PRETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "espatula de resina almore kota ": { cat: "DENTÍSTICA", marca: "FAVA", min: 1 },
+            "ESPELHO BUCAL COMPLETO": { cat: "DIVERSOS", marca: "FAVA", min: 10 },
+            "EUGENOL": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "EUCALIPTOL": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "f1 DENTSPLY": { cat: "ENDODONTIA", marca: "", min: 2 },
+            "Filme Adulto": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
+            "Filme Infantil": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
+            "FIO AÇO 12 INFERIOR -50": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 12 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 14 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 14 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16X22 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16X22 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 17X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 17X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 18 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 18 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 18X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 18X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 19X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 19X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 20 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 20 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO DE SUTURA 3-0 NYLON": { cat: "CIRURGIA", marca: "PROCARE", min: 3 },
+            "Fio dental": { cat: "DENTÍSTICA", marca: "HILLO", min: 1 },
+            "FIO NITI 12 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 12 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 14 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 14 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X16  INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X16  SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X22  INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 16X22 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 17X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 17X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 18 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 18 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 18X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 18X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 19X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 19X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 20 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 20 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO RETRATOR 00": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 1 },
+            "FIO RETRATOR 000": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 1 },
+            "FIXADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 1 },
+            "Flúor": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 1 },
+            "GANCHO PONTA BOLA RETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "GAZE HIDROFILICA": { cat: "DIVERSOS", marca: "ULTRACOTT", min: 2 },
+            "Gel dessensibilizante": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 2 },
+            "GELINHOS": { cat: "DIVERSOS", marca: "-", min: 20 },
+            "GESSO TIPO III AMARELO": { cat: "DIVERSOS", marca: "ASFER", min: 2 },
+            "GESSO TIPO IV ROSA HEROSTONE": { cat: "DIVERSOS", marca: "VIGODENT", min: 2 },
+            "grampo de isolamento numero 200   14a   28": { cat: "ENDODONTIA", marca: "SS WHITE", min: 1 },
+            "GRAU CIRURGICO 20X100": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "GRAU CIRURGICO 30X100": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "GUTAPERCHA  ACESSORIA": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "GUTAPERCHA ROSA ACESSORIA FM": { cat: "ENDODONTIA", marca: "TANARI", min: 1 },
+            "GUTAPERCHA UNIVERSAL F1": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "HEMOSPOM ": { cat: "CIRURGIA", marca: "MAQUIRA", min: 1 },
+            "Hidróxido de Cálcio P.A.": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 2 },
+            "HYDCAL": { cat: "ENDODONTIA", marca: "HYDCAL", min: 2 },
+            "Inômino de vidro pó/liquído": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 1 },
+            "Integrador quimico  monitoramento de esterilização": { cat: "DIVERSOS", marca: "CLEAN UP", min: 5 },
+            "Integrador biologico monitoramento de esterilização": { cat: "DIVERSOS", marca: "CLEAN UP", min: 5 },
+            "JOGO DE MOLDEIRAS PARCIAL DE ALUMINIO": { cat: "DIVERSOS", marca: "TECNODENT", min: 1 },
+            "KIT ENDO IRRIGAÇÃO ENDO ": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
+            "Kit disco de lixa (diamond pro )": { cat: "DENTÍSTICA", marca: "", min: 1 },
+            "KIT SOMENTE SERINGA DE IRRIGAÇÃO E ASPIRAÇÃO COM 10": { cat: "ENDODONTIA", marca: "ULTADENT", min: 5 },
+            "LÂMINA DE BISTURI Nº12": { cat: "CIRURGIA", marca: "SOLIDOR", min: 1 },
+            "LÂMINA DE BISTURI Nº15": { cat: "CIRURGIA", marca: "SOLIDOR", min: 1 },
+            "LENCOL DE BORRACHA": { cat: "ENDODONTIA", marca: "MADEITEX", min: 1 },
+            "LIDOSTESIN (LIDOCAIÍNA) - TUBETE PLÁSTICO": { cat: "DIVERSOS", marca: "SSWHITE", min: 4 },
+            "LIMA K  ENDODONTICA 10 25MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "lima k 10 ": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "lima k 15 ": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "LIMA K ENDODONTICA 15 31 MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "LIMA K ENDODONTICA 25 MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "Lixa Abrasiva de Metal": { cat: "DENTÍSTICA", marca: "INJECTA", min: 2 },
+            "Lixa Abrasiva de Papel": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 2 },
+            "LUBRIFICANTE DE MOTOR": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "LUVA CIRURGICA 6,5": { cat: "CIRURGIA", marca: "DESCARPAK", min: 30 },
+            "MÁSCARA DESCARTÁVEL caixa 50": { cat: "DIVERSOS", marca: "SP", min: 4 },
+            "Micro Brush": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "Microbrush extra fino": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 1 },
             "MINI ESPORÃO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
             "MOLA ABERTA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "ORTOBITE AZUL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
-            "ORTOBITE ROSA PINK": { cat: "ORTODONTIA", marca: "MAQUIRA", min: 2 },
-            "SAQUINHO PARA ELASTICO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "MOLA FECHADA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Obturador Provisório": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 1 },
+            "PARAMONO": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "Pasta de Zinco": { cat: "DENTÍSTICA", marca: "LYSANDA", min: 1 },
+            "Pasta Profilática": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 3 },
+            "Pedra Pomes": { cat: "DENTÍSTICA", marca: "SSWHITE", min: 1 },
+            "Pino de Fibra de Vidro 0,5": { cat: "DENTÍSTICA", marca: "SUPERPOST", min: 1 },
+            "Pino de Fibra de Vidro 1,0": { cat: "DENTÍSTICA", marca: "SUPERPOST", min: 1 },
+            "PLACA DE CLAREAMENTO 1MM": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 2 },
+            "PONTA PAPEL 35-40": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "Resina Acrílica incolor": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Resina Auto": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Resina FORMA Opaca ": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
+            "Resina LLIS - DA2": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina LLIS- DA3": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina LLIS- DA4": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina Master Flow A2 - ": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 2 },
+            "RESINA ORTHOCEM": { cat: "ORTODONTIA", marca: "FGM", min: 3 },
+            "Resina Z100 - A1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
+            "Resina Z100 - A2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
+            "Resina Z100 - A3": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 4 },
+            "Resina Z100 - A3.5": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 4 },
+            "REVELADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 2 },
+            "Selante max seal": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 2 },
+            "SERINGAS 20ML": { cat: "DIVERSOS", marca: "DESCARPAK", min: 2 },
+            "SERINGAS 3ML botox": { cat: "DIVERSOS", marca: "DESCARPAK", min: 1 },
+            "Silano": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 1 },
+            "Silicone Optozil (ACTIVADOR)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "Silicone Optozil (DENSO)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "Silicone Optozil (LEVE)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "SODA CLORADA": { cat: "ENDODONTIA", marca: "ASFER", min: 1 },
+            "SOFT REEMBASADOR": { cat: "DIVERSOS", marca: "TDV", min: 1 },
+            "SOLUCAO DE MILTON": { cat: "ENDODONTIA", marca: "ASFER", min: 1 },
+            "SOLUÇÃO HEMOSTÁTICA": { cat: "CIRURGIA", marca: "MAQUIRA", min: 1 },
+            "SORO FISIOLOGICO 500ML": { cat: "CIRURGIA", marca: "-", min: 3 },
             "STOP ABERTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
-            "TUBO MORELLI COLAGEM SIMPLES 16/17": { cat: "ORTODONTIA", marca: "MORELLI", min: 5 },
-            "TUBO MORELLI COLAGEM SIMPLES 26/27": { cat: "ORTODONTIA", marca: "MORELLI", min: 5 },
-            "TUBO MORELLI COLAGEM SIMPLES 36/37": { cat: "ORTODONTIA", marca: "MORELLI", min: 5 },
-            "TUBO MORELLI COLAGEM SIMPLES 46/47": { cat: "ORTODONTIA", marca: "MORELLI", min: 5 }
+            "STOP FECHADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "SUGADOR CIRURGICO caixa com 40 unidades": { cat: "CIRURGIA", marca: "MAQUIRA", min: 3 },
+            "sugador endodontico descartavel ": { cat: "ENDODONTIA", marca: "SS PLUS", min: 3 },
+            "SUGADOR TRANSPARENTE": { cat: "DIVERSOS", marca: "ALL PRIME", min: 17 },
+            "TESTE DE VITALIDADE": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "Tira matriz de Poliéster Transparente ": { cat: "DENTÍSTICA", marca: "k dent", min: 2 },
+            "Top Dam": { cat: "DENTÍSTICA", marca: "ALLPLAN", min: 2 },
+            "TOUCA BRANCA": { cat: "DIVERSOS", marca: "DESCARPAK", min: 1 },
+            "TRICESOL": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "TUBO  COLAGEM SIMPLES 36/37 COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 16/17 COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 26/27COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 46/47COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 17": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 27": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 47": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM ROTH 022 N 37": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 16": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 26": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 36": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 46": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ULTRACALL": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 2 },
+            "VASELINA SOLIDA": { cat: "DIVERSOS", marca: "RIO QUIMICA", min: 1 }
         };
 
-        // --- FUNÇÕES DE NAVEGAÇÃO ---
+        // --- UTILITÁRIOS VISUAIS ---
         window.showLoading = (show) => { document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none'; }
         
         window.showAlert = (msg) => {
             const box = document.getElementById('alert-box');
             document.getElementById('alert-message').textContent = msg;
             box.classList.remove('hidden');
-            setTimeout(() => box.classList.add('hidden'), 5000); // 5 segundos
+            setTimeout(() => box.classList.add('hidden'), 5000); 
         }
 
         window.goToPage = (pageId) => {
@@ -703,9 +644,7 @@
             if(pageId === 'page-order-form') renderOrderTable();
         }
 
-        // --- FIREBASE ---
-        
-        // 1. Carregar Dados
+        // --- LÓGICA FIREBASE ---
         async function loadFilialData() {
             showLoading(true);
             try {
@@ -716,14 +655,17 @@
                     filialInventory = docSnap.data().items;
                 } else {
                     filialInventory = {};
-                    for (const [desc, item] of Object.entries(INITIAL_CATALOG)) {
-                        filialInventory[desc] = {
-                            descricao: desc,
-                            categoria: item.cat,
-                            marca: item.marca,
-                            minimo: item.min,
-                            estoque: 0
-                        };
+                    // Se não tiver dados, carrega do catálogo novo
+                    if(typeof INITIAL_CATALOG !== 'undefined') {
+                        for (const [desc, item] of Object.entries(INITIAL_CATALOG)) {
+                            filialInventory[desc] = {
+                                descricao: desc,
+                                categoria: item.cat,
+                                marca: item.marca,
+                                minimo: item.min,
+                                estoque: 0
+                            };
+                        }
                     }
                     await setDoc(doc(db, "estoques", selectedFilial), { items: filialInventory });
                 }
@@ -734,7 +676,6 @@
             showLoading(false);
         }
 
-        // 2. Salvar Estoque
         window.saveStock = async () => {
             showLoading(true);
             try {
@@ -747,10 +688,46 @@
             showLoading(false);
         }
 
-        // 3. Enviar Pedido
+        // FUNÇÃO PARA RESETAR O ESTOQUE COM A NOVA LISTA (Botão Novo no Admin)
+        window.resetStockToCatalog = async () => {
+            const pwd = prompt("ATENÇÃO: Isso apagará todas as contagens atuais e carregará a NOVA LISTA de produtos. Digite a senha mestre para confirmar:");
+            if(pwd !== MASTER_PASSWORD) return showAlert("Senha incorreta!");
+
+            // Pergunta qual filial resetar (ou reseta todas se quiser, mas vamos focar na atual se estiver logado, ou pede input)
+            // Como estamos no Admin, não temos necessariamente uma filial selecionada no contexto global se o admin logou direto sem passar pela filial.
+            // Mas vamos assumir que queremos limpar TUDO ou pedir o nome.
+            
+            const filialToReset = prompt("Digite o nome da Filial para aplicar a nova lista (ex: Patos de Minas):");
+            if(!filialToReset) return;
+
+            showLoading(true);
+            try {
+                // Deleta o documento antigo
+                await deleteDoc(doc(db, "estoques", filialToReset));
+                
+                // Recria com o novo catálogo
+                const newInventory = {};
+                for (const [desc, item] of Object.entries(INITIAL_CATALOG)) {
+                    newInventory[desc] = {
+                        descricao: desc,
+                        categoria: item.cat,
+                        marca: item.marca,
+                        minimo: item.min,
+                        estoque: 0
+                    };
+                }
+                await setDoc(doc(db, "estoques", filialToReset), { items: newInventory });
+                showAlert(`Sucesso! A lista nova foi aplicada para ${filialToReset}.`);
+            } catch (error) {
+                console.error(error);
+                showAlert("Erro ao resetar: " + error.message);
+            }
+            showLoading(false);
+        }
+
         window.submitOrder = async () => {
             if(!selectedFilial) {
-                showAlert("Erro crítico: Nenhuma filial selecionada. Faça login novamente.");
+                showAlert("Erro: Nenhuma filial selecionada.");
                 return;
             }
             if(Object.keys(currentOrder).length === 0 && !currentExtraItems) return showAlert("Pedido vazio!");
@@ -770,20 +747,16 @@
                 window.currentOrder = {};
                 window.currentExtraItems = "";
                 document.getElementById('extra-items-textarea').value = "";
-                showAlert("Pedido enviado com sucesso!");
+                showAlert("Pedido enviado!");
                 await renderClinicHistory(); 
             } catch (error) {
-                console.error("Erro no envio:", error);
-                if(error.message.includes("index")) {
-                    alert("ATENÇÃO: É necessário criar um índice no Firebase. Abra o console do navegador (F12) e clique no link fornecido pelo erro.");
-                }
+                console.error("Erro envio:", error);
                 showAlert("Erro no envio: " + error.message);
             } finally {
                 showLoading(false);
             }
         }
 
-        // 4. Histórico da Clínica
         window.renderClinicHistory = async () => {
             showLoading(true);
             const list = document.getElementById('clinic-history-list');
@@ -796,16 +769,18 @@
                 if(querySnapshot.empty) {
                     list.innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum pedido encontrado.</p>';
                 }
-
+                
+                window.tempHistory = [];
                 querySnapshot.forEach((doc) => {
                     const order = doc.data();
-                    const div = document.createElement('div');
+                    window.tempHistory.push({id: doc.id, data: order});
                     
                     let statusClass = "bg-yellow-100 text-yellow-800 border-yellow-200";
                     let icon = "clock";
                     if(order.status === 'Aprovado') { statusClass = "bg-green-100 text-green-800 border-green-200"; icon = "check-circle"; }
                     if(order.status === 'Rejeitado') { statusClass = "bg-red-100 text-red-800 border-red-200"; icon = "x-circle"; }
 
+                    const div = document.createElement('div');
                     div.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow";
                     div.innerHTML = `
                         <div class="flex justify-between items-start mb-3">
@@ -825,15 +800,9 @@
                     list.appendChild(div);
                 });
                 if(window.lucide) lucide.createIcons();
-                goToPage('page-history-clinic');
-                window.tempHistory = querySnapshot.docs.map(d => ({id: d.id, data: d.data()}));
             } catch (error) {
                 console.error(error);
-                if(error.message.includes("index")) {
-                     showAlert("ERRO DE ÍNDICE: Abra o console (F12) e clique no link para criar o índice no Firebase.");
-                } else {
-                     showAlert("Erro ao carregar histórico: " + error.message);
-                }
+                showAlert("Erro histórico: " + error.message);
             }
             showLoading(false);
         }
@@ -843,7 +812,6 @@
             if(orderObj) printOrder(orderObj.data.items, orderObj.data.extraItems, orderObj.data.createdAt);
         }
 
-        // 5. Admin Panel
         window.loadAdminPanel = async () => {
             showLoading(true);
             const container = document.getElementById('admin-list-container');
@@ -881,7 +849,7 @@
                 });
                 if(window.lucide) lucide.createIcons();
             } catch (error) {
-                showAlert("Erro ao carregar pedidos: " + error.message);
+                showAlert("Erro admin: " + error.message);
             }
 
             document.getElementById('no-pending-orders').style.display = hasOrders ? 'none' : 'block';
@@ -895,14 +863,14 @@
                 showAlert(`Pedido ${newStatus}!`);
                 loadAdminPanel();
             } catch (error) {
-                showAlert("Erro ao atualizar status: " + error.message);
+                showAlert("Erro ao atualizar: " + error.message);
             }
             showLoading(false);
         }
         
         window.refreshAdminPanel = () => { loadAdminPanel(); }
 
-        // --- UI AUXILIAR ---
+        // --- MANIPULAÇÃO DE DADOS (Group & Render) ---
         function groupProducts(list) {
             const grouped = {};
             list.forEach(p => {
@@ -912,14 +880,12 @@
             return grouped;
         }
 
-        // --- FUNÇÃO PARA DESTRAVAR MÍNIMOS ---
         window.unlockMinimums = () => {
-            const pwd = prompt("Digite a Senha Mestra para alterar os mínimos:");
+            const pwd = prompt("Senha Mestra para alterar mínimos:");
             if (pwd === MASTER_PASSWORD) {
                 minUnlocked = true;
-                showAlert("Mínimos desbloqueados!");
+                showAlert("Desbloqueado!");
                 renderStockTable(); 
-                
                 const btn = document.getElementById('btn-unlock');
                 btn.classList.remove('bg-gray-200', 'text-gray-600');
                 btn.classList.add('bg-green-200', 'text-green-800');
@@ -928,17 +894,16 @@
             }
         }
 
-        // --- RENDERIZAÇÃO OTIMIZADA (SEM TRAVAMENTOS) ---
+        // RENDER OTIMIZADO (Corrige o visual e lentidão)
         function renderStockTable() {
             const tbody = document.getElementById('stock-table-body');
             const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
             const grouped = groupProducts(list);
             
-            // OTIMIZAÇÃO: Cria uma string gigante primeiro, depois desenha uma única vez.
             let htmlBuffer = '';
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                // CORRIGIDO: Removido 'sticky top-10' para evitar erro visual de sobreposição
+                // CATEGORIA (Sem Sticky para não encavalar)
                 htmlBuffer += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
                     const disabledAttr = minUnlocked ? '' : 'disabled';
@@ -961,8 +926,6 @@
                     `;
                 });
             }
-            
-            // Desenha tudo de uma vez (Milissegundos ao invés de segundos)
             tbody.innerHTML = htmlBuffer;
             if(window.lucide) lucide.createIcons();
         }
@@ -972,7 +935,7 @@
         }
 
         window.removeProduct = (desc) => {
-            if(confirm("Remover este produto da lista?")) {
+            if(confirm("Remover este produto?")) {
                 delete filialInventory[desc];
                 renderStockTable();
             }
@@ -983,11 +946,9 @@
             const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
             const grouped = groupProducts(list);
             
-            // OTIMIZAÇÃO AQUI TAMBÉM
             let htmlBuffer = '';
 
             for (const [cat, prods] of Object.entries(grouped).sort()) {
-                 // CORRIGIDO: Removido 'sticky top-10' para evitar erro visual de sobreposição
                 htmlBuffer += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
                 prods.forEach(p => {
                     const sug = Math.max(0, p.minimo - p.estoque);
@@ -1007,7 +968,6 @@
                     `;
                 });
             }
-            
             tbody.innerHTML = htmlBuffer;
         }
 
@@ -1044,7 +1004,7 @@
             });
         }
         
-        // --- LOGINS E SENHAS ---
+        // --- LOGINS ---
         window.goToLogin = (f) => { 
             selectedFilial = f;
             localStorage.setItem('lastFilial', f); 
@@ -1101,7 +1061,7 @@
             if(e.key === 'Enter') handleAdminLogin();
         });
 
-        // --- IMPRESSÃO CLEAN ---
+        // --- IMPRESSÃO ---
         window.printOrder = (items, extras, date = null) => {
             const area = document.getElementById('print-area');
             const dateStr = date ? new Date(date).toLocaleString() : new Date().toLocaleString();
@@ -1111,24 +1071,19 @@
                     <div class="print-title">Pedido de Materiais</div>
                     <div class="print-meta">${selectedFilial} - ${dateStr}</div>
                 </div>
-                
                 <div class="print-grid">
             `;
-            
             for(const [k,v] of Object.entries(items)) {
                 html += `<div class="print-item"><span>${k}</span><span>${v}</span></div>`;
             }
             html += `</div>`; 
-
-            if(extras) {
-                html += `<div class="print-extras"><strong>Observações:</strong><br>${extras}</div>`;
-            }
+            if(extras) html += `<div class="print-extras"><strong>Observações:</strong><br>${extras}</div>`;
             
             area.innerHTML = html;
             window.print();
         }
 
-        // --- ADICIONAR PRODUTO ---
+        // --- NOVO PRODUTO ---
         window.openAddProductModal = () => { document.getElementById('modal-add-product').style.display = 'flex'; }
         window.closeAddProductModal = () => { document.getElementById('modal-add-product').style.display = 'none'; }
         window.addNewProduct = () => {
@@ -1146,7 +1101,7 @@
             renderStockTable();
         }
 
-        // Inicializa
+        // INICIALIZAÇÃO
         goToPage('page-select-filial');
 
     </script>
