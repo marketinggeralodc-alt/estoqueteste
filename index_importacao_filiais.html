@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Controle de Pedidos OdontoCompany (Online)</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+
+    <style>
+        body { font-family: 'Inter', sans-serif; }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        .page { display: none; }
+        .status-pendente { background-color: #fef9c3; border-left-color: #facc15; }
+        .status-aprovado { background-color: #dcfce7; border-left-color: #22c55e; }
+        .status-rejeitado { background-color: #fee2e2; border-left-color: #ef4444; }
+        
+        /* IMPRESSÃO OTIMIZADA */
+        @media print {
+            body > * { display: none !important; }
+            #print-area, #print-area * { display: block !important; visibility: visible !important; }
+            #print-area { 
+                position: absolute; left: 0; top: 0; width: 100%; 
+                color: #000; background: white; padding: 10px;
+            }
+            .print-grid {
+                display: grid; grid-template-columns: 1fr 1fr; 
+                gap: 5px 20px; font-size: 11px;
+            }
+            .print-item {
+                display: flex; justify-content: space-between; 
+                border-bottom: 1px dashed #ccc; padding: 2px 0;
+            }
+            .no-print { display: none !important; }
+        }
+    </style>
+</head>
+<body class="bg-gray-100 min-h-screen pb-10">
+
+    <div id="app" class="w-full">
+        <div id="page-select-filial" class="page flex flex-col items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-md bg-white rounded-lg shadow-xl p-6 md:p-8">
+                <div class="flex justify-center mb-6">
+                    <svg class="h-16 w-16 text-blue-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-1 4h1m4-8h1m-1 4h1m-1 4h1" />
+                    </svg>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-bold text-center text-gray-800 mb-6">Controle de Pedidos</h1>
+                <p class="text-center text-xs text-green-600 mb-4 font-bold flex items-center justify-center gap-2 bg-green-50 py-1 rounded">
+                    <i data-lucide="cloud" class="w-3 h-3"></i> Sistema Online
+                </p>
+                <div class="space-y-3">
+                    <button onclick="goToLogin('Patos de Minas')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
+                        <span>Patos de Minas</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
+                    </button>
+                    <button onclick="goToLogin('São Gotardo')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
+                        <span>São Gotardo</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
+                    </button>
+                    <button onclick="goToLogin('Ibiá')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
+                        <span>Ibiá</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
+                    </button>
+                    <button onclick="goToLogin('Guarda dos Ferreiros')" class="w-full flex justify-between items-center text-lg text-gray-700 bg-gray-50 hover:bg-blue-50 border border-gray-200 hover:border-blue-500 py-3 px-4 rounded-lg font-semibold transition-all group">
+                        <span>Guarda dos Ferreiros</span> <i data-lucide="chevron-right" class="text-gray-400"></i>
+                    </button>
+                </div>
+                <div class="text-center mt-8 pt-4 border-t">
+                    <a href="#" onclick="goToAdminLogin()" class="text-sm text-gray-400 hover:text-blue-600 flex items-center justify-center gap-1">
+                        <i data-lucide="lock" class="w-3 h-3"></i> Área Administrativa
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-login" class="page flex flex-col items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-sm bg-white rounded-lg shadow-xl p-8">
+                <button onclick="logout()" class="text-gray-500 hover:text-blue-600 mb-4 flex items-center text-sm"><i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Voltar</button>
+                <div class="text-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">Login</h2>
+                    <p class="text-blue-600 font-medium" id="login-filial-name">...</p>
+                </div>
+                <input type="password" id="filial-password" placeholder="Digite a senha" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 outline-none focus:ring-2 focus:ring-blue-500">
+                <button onclick="handleFilialLogin()" class="w-full text-lg text-white bg-blue-600 hover:bg-blue-700 py-3 px-4 rounded-lg font-bold shadow-md mt-4">Entrar</button>
+            </div>
+        </div>
+        
+        <div id="page-admin-login" class="page flex flex-col items-center justify-center min-h-screen p-4">
+            <div class="w-full max-w-sm bg-white rounded-lg shadow-xl p-8 border-t-4 border-red-500">
+                <button onclick="logout()" class="text-gray-500 hover:text-blue-600 mb-4 flex items-center text-sm"><i data-lucide="arrow-left" class="w-4 h-4 mr-1"></i> Voltar</button>
+                <h2 class="text-xl font-bold text-center text-gray-800 mb-6">Administrador</h2>
+                <input type="password" id="admin-password" placeholder="Senha Mestre" class="w-full border border-gray-300 rounded-lg p-3 text-center text-lg mb-4 outline-none focus:ring-2 focus:ring-red-500">
+                <button onclick="handleAdminLogin()" class="w-full text-lg text-white bg-red-600 hover:bg-red-700 py-3 px-4 rounded-lg font-bold shadow-md">Acessar Painel</button>
+            </div>
+        </div>
+
+        <div id="page-menu" class="page container mx-auto p-4 md:p-8 max-w-4xl">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-4 rounded-xl shadow-sm">
+                <div>
+                    <p class="text-sm text-gray-500">Bem-vindo(a),</p>
+                    <h1 class="text-2xl font-bold text-blue-600" id="menu-filial-name">Filial</h1>
+                </div>
+                <button onclick="logout()" class="text-red-500 hover:text-red-700 font-semibold py-2 px-4 rounded-lg border border-red-100 hover:bg-red-50 flex items-center gap-2">
+                    <i data-lucide="log-out" class="w-4 h-4"></i> Sair
+                </button>
+            </header>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div onclick="goToPage('page-manage-stock')" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-blue-300 border border-transparent transition-all">
+                    <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mb-4"><i data-lucide="package" class="h-8 w-8 text-blue-600"></i></div>
+                    <h2 class="text-xl font-bold text-gray-800">Meu Estoque</h2>
+                    <p class="text-sm text-gray-500">Atualize a contagem.</p>
+                </div>
+                <div onclick="goToPage('page-order-form')" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-green-300 border border-transparent transition-all">
+                    <div class="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4"><i data-lucide="shopping-cart" class="h-8 w-8 text-green-600"></i></div>
+                    <h2 class="text-xl font-bold text-gray-800">Novo Pedido</h2>
+                    <p class="text-sm text-gray-500">Gere pedidos.</p>
+                </div>
+                <div onclick="renderClinicHistory()" class="bg-white rounded-xl shadow-md p-6 flex flex-col items-center text-center cursor-pointer hover:shadow-lg hover:border-purple-300 border border-transparent transition-all md:col-span-2">
+                    <div class="flex items-center gap-4 mb-2">
+                        <div class="w-12 h-12 bg-purple-100 rounded-full flex items-center justify-center"><i data-lucide="history" class="h-6 w-6 text-purple-600"></i></div>
+                        <div><h2 class="text-xl font-bold text-gray-800">Meus Pedidos</h2><p class="text-sm text-gray-500">Histórico de envios.</p></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="page-manage-stock" class="page container mx-auto p-4 max-w-6xl">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="goToPage('page-menu')" class="p-2 bg-white rounded-full shadow text-gray-600 hover:text-blue-600"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">Estoque</h1>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-4 flex flex-col md:flex-row gap-3">
+                <div class="relative flex-1">
+                    <i data-lucide="search" class="absolute left-3 top-3 text-gray-400 w-5 h-5"></i>
+                    <input type="text" id="stock-search" onkeyup="filterTable('stock-search', 'stock-table-body')" placeholder="Buscar produto..." class="w-full pl-10 p-2 border rounded-lg">
+                </div>
+                <button onclick="unlockMinimums()" id="btn-unlock" class="bg-gray-200 text-gray-600 px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-gray-300 transition-colors">
+                    <i data-lucide="lock" class="w-4 h-4"></i> <span class="hidden md:inline">Mínimos</span>
+                </button>
+                <button onclick="openAddProductModal()" class="bg-green-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-green-700">
+                    <i data-lucide="plus" class="w-4 h-4"></i> Novo
+                </button>
+                <button onclick="saveStock()" class="bg-blue-600 text-white px-4 py-2 rounded-lg font-medium flex items-center justify-center gap-2 shadow-sm hover:bg-blue-700">
+                    <i data-lucide="save" class="w-4 h-4"></i> Salvar Nuvem
+                </button>
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100 max-h-[65vh]">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">Produto</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20 bg-gray-50">Mín</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-20 bg-gray-50">Atual</th>
+                            <th class="px-2 py-3 text-center w-10 bg-gray-50"></th>
+                        </tr>
+                    </thead>
+                    <tbody id="stock-table-body" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+        </div>
+
+        <div id="page-order-form" class="page container mx-auto p-4 max-w-6xl">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="goToPage('page-menu')" class="p-2 bg-white rounded-full shadow text-gray-600 hover:text-blue-600"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">Novo Pedido</h1>
+            </div>
+            
+            <div class="bg-white p-4 rounded-xl shadow-sm mb-4 relative">
+                <i data-lucide="search" class="absolute left-6 top-6 text-gray-400 w-5 h-5"></i>
+                <input type="text" id="order-search" onkeyup="filterTable('order-search', 'order-table-body')" placeholder="Filtrar produtos..." class="w-full pl-10 p-2 border rounded-lg">
+            </div>
+
+            <div class="overflow-x-auto bg-white rounded-xl shadow-sm border border-gray-100 max-h-[50vh] mb-6">
+                <table class="w-full text-left border-collapse">
+                    <thead class="bg-gray-50 sticky top-0 z-10 shadow-sm">
+                        <tr>
+                            <th class="px-4 py-3 text-xs font-bold text-gray-500 uppercase tracking-wider bg-gray-50">Produto</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16 bg-gray-50">Mín</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-gray-500 uppercase w-16 bg-gray-50">Est.</th>
+                            <th class="px-2 py-3 text-center text-xs font-bold text-red-500 uppercase w-16 bg-gray-50">Sug.</th>
+                            <th class="px-4 py-3 text-center text-xs font-bold text-green-600 uppercase w-24 bg-gray-50">Qtd</th>
+                        </tr>
+                    </thead>
+                    <tbody id="order-table-body" class="divide-y divide-gray-100"></tbody>
+                </table>
+            </div>
+
+            <div class="bg-white rounded-xl shadow-sm p-4 mb-6 border border-gray-100">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Observações / Extras</label>
+                <textarea id="extra-items-textarea" rows="3" class="w-full border border-gray-300 rounded-lg p-3 outline-none focus:ring-2 focus:ring-blue-500" placeholder="Digite aqui itens que não estão na lista..."></textarea>
+            </div>
+
+            <button onclick="reviewOrder()" class="w-full bg-blue-600 hover:bg-blue-700 text-white text-lg font-bold py-4 rounded-xl shadow-lg transition-transform active:scale-95 flex justify-center items-center gap-2">
+                Revisar Pedido <i data-lucide="arrow-right" class="w-5 h-5"></i>
+            </button>
+        </div>
+
+        <div id="page-review-order" class="page container mx-auto p-4 max-w-3xl">
+            <button onclick="goToPage('page-order-form')" class="mb-6 text-gray-600 hover:text-blue-600 font-semibold flex items-center gap-1"><i data-lucide="arrow-left" class="w-4 h-4"></i> Voltar e Editar</button>
+            <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+                <div class="bg-gray-50 p-6 border-b text-center">
+                    <h1 class="text-2xl font-bold text-gray-800">Resumo do Pedido</h1>
+                    <p class="text-gray-500 text-sm">Confira os itens antes de enviar</p>
+                </div>
+                <div id="review-summary-container" class="p-6"></div>
+                <div class="p-6 bg-gray-50 border-t flex flex-col md:flex-row gap-4">
+                    <button onclick="printOrder(currentOrder, currentExtraItems)" class="flex-1 bg-white border border-gray-300 text-gray-700 font-bold py-3 rounded-lg hover:bg-gray-50 flex justify-center items-center gap-2">
+                        <i data-lucide="printer" class="w-5 h-5"></i> Imprimir Rascunho
+                    </button>
+                    <button onclick="submitOrder()" class="flex-1 bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded-lg shadow-md flex justify-center items-center gap-2">
+                        <i data-lucide="send" class="w-5 h-5"></i> Confirmar Envio
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="page-history-clinic" class="page container mx-auto p-4 max-w-5xl">
+            <div class="flex items-center gap-4 mb-6">
+                <button onclick="goToPage('page-menu')" class="p-2 bg-white rounded-full shadow text-gray-600 hover:text-blue-600"><i data-lucide="arrow-left" class="w-5 h-5"></i></button>
+                <h1 class="text-xl md:text-2xl font-bold text-gray-800">Histórico de Pedidos</h1>
+            </div>
+            <div id="clinic-history-list" class="space-y-4"></div>
+        </div>
+
+        <div id="page-admin-panel" class="page container mx-auto p-4 max-w-6xl">
+            <header class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4 bg-white p-6 rounded-xl shadow-sm border border-red-100">
+                <div class="flex items-center gap-4">
+                    <div class="bg-red-50 p-3 rounded-lg"><i data-lucide="shield" class="w-6 h-6 text-red-600"></i></div>
+                    <div>
+                        <h1 class="text-2xl font-bold text-red-600">Painel Admin</h1>
+                        <p class="text-gray-500 text-sm">Monitoramento em Tempo Real</p>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="resetStockToCatalog()" class="text-yellow-600 bg-yellow-50 hover:bg-yellow-100 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-yellow-200">
+                         <i data-lucide="database" class="w-4 h-4"></i> Resetar Estoque (Lista Nova)
+                    </button>
+
+                    <button onclick="openImportCatalog()" class="bg-green-50 text-green-700 hover:bg-green-100 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors border border-green-200">
+                        <i data-lucide="upload" class="w-4 h-4"></i> Importar Catálogo (CSV/JSON)
+                    </button>
+
+                    <button onclick="refreshAdminPanel()" class="text-blue-600 bg-blue-50 hover:bg-blue-100 font-semibold px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                         <i data-lucide="refresh-cw" class="w-4 h-4"></i> Atualizar
+                    </button>
+                    <button onclick="logout()" class="text-gray-600 border border-gray-300 hover:border-red-300 hover:text-red-600 font-semibold px-4 py-2 rounded-lg transition-colors">Sair</button>
+                </div>
+            </header>
+            
+            <div id="admin-list-container" class="space-y-6"></div>
+            <p id="no-pending-orders" class="text-center text-gray-400 py-12 hidden italic">Nenhum pedido pendente no momento.</p>
+        </div>
+
+    </div>
+
+    <div id="loading-overlay" class="fixed inset-0 bg-black/50 flex items-center justify-center hidden z-[9999]">
+        <div class="bg-white p-6 rounded-xl shadow-2xl flex flex-col items-center">
+            <div class="animate-spin rounded-full h-10 w-10 border-4 border-blue-600 border-t-transparent mb-4"></div>
+            <div class="text-gray-800 font-bold">Processando...</div>
+        </div>
+    </div>
+    
+    <div id="alert-box" class="fixed top-6 right-6 bg-gray-800 text-white px-6 py-4 rounded-xl shadow-2xl hidden z-[10000] flex items-center gap-3">
+        <i data-lucide="info" class="w-5 h-5 text-blue-400"></i>
+        <span id="alert-message"></span>
+    </div>
+    
+    <div id="print-area" class="hidden"></div>
+    <input type="file" id="import-catalog-file" accept=".csv,.json" class="hidden" onchange="handleImportCatalogFile(event)">
+
+    
+    <div id="modal-add-product" class="fixed inset-0 bg-black/60 flex items-center justify-center p-4 hidden z-[9990]">
+        <div class="bg-white rounded-xl shadow-2xl w-full max-w-md p-6">
+            <h2 class="text-xl font-bold mb-4 text-gray-800">Novo Produto</h2>
+            <div class="space-y-3">
+                <input type="text" id="new-prod-desc" placeholder="Nome do Produto" class="w-full border p-3 rounded-lg outline-none focus:border-blue-500">
+                <input type="text" id="new-prod-cat" placeholder="Categoria (Ex: Dentística)" class="w-full border p-3 rounded-lg outline-none focus:border-blue-500">
+                <input type="text" id="new-prod-marca" placeholder="Marca" class="w-full border p-3 rounded-lg outline-none focus:border-blue-500">
+            </div>
+            <div class="flex justify-end gap-3 mt-6">
+                <button onclick="closeAddProductModal()" class="px-4 py-2 text-gray-600 hover:bg-gray-100 rounded-lg">Cancelar</button>
+                <button onclick="addNewProduct()" class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 font-medium">Adicionar</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+        import { getFirestore, collection, doc, getDoc, setDoc, addDoc, getDocs, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+
+        // --- CONFIGURAÇÃO ---
+        const firebaseConfig = {
+            apiKey: "AIzaSyACXxrJYZmIgBK65t-aAL8wa7wNsQxRuCE",
+            authDomain: "odonto-teste-71e4c.firebaseapp.com",
+            projectId: "odonto-teste-71e4c",
+            storageBucket: "odonto-teste-71e4c.firebasestorage.app",
+            messagingSenderId: "198684123468",
+            appId: "1:198684123468:web:849033310014d7e5146fe9"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const db = getFirestore(app);
+
+        // --- VARIÁVEIS ---
+        window.selectedFilial = localStorage.getItem('lastFilial') || null; 
+        let filialInventory = {};
+        window.currentOrder = {};
+        window.currentExtraItems = "";
+        let minUnlocked = false; 
+        
+        const FILIAL_PASSWORDS = { 'Patos de Minas': '123', 'São Gotardo': '123', 'Ibiá': '123', 'Guarda dos Ferreiros': '123' };
+        const ADMIN_PASSWORD = 'admin123';
+        const MASTER_PASSWORD = 'master'; 
+
+        // CATÁLOGO ATUALIZADO (BASEADO NA SUA PLANILHA NOVA)
+        const INITIAL_CATALOG = {
+            "Ácido Fluorídrico": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 2 },
+            "Ácido Fosfórico 37%": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 7 },
+            "Acrílica AltoPolimerizante 61": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Acrílica AltoPolimerizante 62": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Acrílica AltoPolimerizante 66": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Acrílica AltoPolimerizante 69": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Adesivo autocondicomante ": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 1 },
+            "Adesivo bond": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 4 },
+            "AGULHA CURTA": { cat: "DIVERSOS", marca: "ALLPRIME", min: 2 },
+            "AGULHA LONGA": { cat: "DIVERSOS", marca: "ALLPRIME", min: 1 },
+            "ALGINATO ALVAGEL": { cat: "DIVERSOS", marca: "DENTSPLY", min: 3 },
+            "ALGODAO ROLETE": { cat: "DIVERSOS", marca: "SSPLUS", min: 15 },
+            "ALPHACAINA": { cat: "DIVERSOS", marca: "DFL", min: 3 },
+            "ARTICAINE": { cat: "DIVERSOS", marca: "DFL", min: 2 },
+            "BABADOR": { cat: "DIVERSOS", marca: "SSPLUS", min: 3 },
+            "Banda Metálica 0,5": { cat: "DENTÍSTICA", marca: "PREVEN", min: 1 },
+            "Banda Metálica 0,7": { cat: "DENTÍSTICA", marca: "PREVEN", min: 1 },
+            "BENSONTOP - ANESTÉSICO TÓPICO": { cat: "DIVERSOS", marca: "DFL", min: 1 },
+            "Bicarbonato": { cat: "DIVERSOS", marca: "PREVEN", min: 1 },
+            "BIOLOGICAL TEST": { cat: "DIVERSOS", marca: "2l", min: 1 },
+            "BONTÃO LINGUAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "BRAQUETE AUTO LIGADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "broca 1014": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "broca 1014 hl ": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "broca 2214  2131": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "BROCA 3118 F": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 5 },
+            "broca 3131   4137": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 3 },
+            "BROCA 3195 FF": { cat: "DENTISTICA", marca: "ALL PRIME", min: 4 },
+            "broca cirurcica  longa alta rotação 702 ": { cat: "DENTÍSTICA", marca: "MICRODONT", min: 4 },
+            "broca cirurcica  longa alta rotação 703": { cat: "DENTÍSTICA", marca: "MICRODONT", min: 4 },
+            "BROCA DE PREPARO": { cat: "DENTÍSTICA", marca: "ALLPLAN", min: 3 },
+            "BROCA ENDO Z": { cat: "ENDODONTIA", marca: "MICRODONT", min: 4 },
+            "BROCA GATES Nº 01": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA GATES Nº 02": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA GATES Nº 03": { cat: "ENDODONTIA", marca: "ULTADENT", min: 2 },
+            "BROCA LARGO N 01": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "BROCA LARGO N 02": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "BROCA LARGO N 03": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "broca multilaminada ": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "CAIXA PARA GUARDAR APARELHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Carbono para ajuste de oclusão": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 3 },
+            "Cartão de Raio X": { cat: "DIVERSOS", marca: "PREVEN", min: 1 },
+            "Cera 7": { cat: "DIVERSOS", marca: "LYSANDRA", min: 1 },
+            "CERA ORTODONTICA - CARTELA POP OFF": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Cera Utilidade Vermelha": { cat: "DIVERSOS", marca: "LYSANDRA", min: 1 },
+            "CIMENTO ENDOFILL": { cat: "ENDODONTIA", marca: "DENTSPLY", min: 1 },
+            "Cimento Resinoso DUAL": { cat: "DENTÍSTICA", marca: "VIGODENT", min: 2 },
+            "Clareamento caseiro": { cat: "DENTÍSTICA", marca: "FGM", min: 20 },
+            "Clareamento Consultório - HP": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "CLOREXIDINA 0,12%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 1 },
+            "Colgadura de rx 10": { cat: "DENTÍSTICA", marca: "", min: 10 },
+            "CLOREXIDINA 2%": { cat: "ENDODONTIA", marca: "RIOQUIMICA", min: 4 },
+            "CONE DE PAPEL 15-40": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "CONE DE PAPEL 30-45": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "CONE DE PAPEL 45-80": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "cone fm ": { cat: "ENDODONTIA", marca: "DENTSPLY", min: 1 },
+            "Cunha de madeira": { cat: "DENTÍSTICA", marca: "TDV", min: 1 },
+            "Decrilay": { cat: "DIVERSOS", marca: "DENCOR", min: 1 },
+            "DENTE DE ESTOQUE INFERIOR ANTERIOR 66": { cat: "DENTÍSTICA", marca: "POP DENT", min: 1 },
+            "DENTE DE ESTOQUE SUPERIOR INCISIVO (ANTERIOR) 66": { cat: "DENTÍSTICA", marca: "POP DENT", min: 1 },
+            "DESCARPACK - 7l": { cat: "DIVERSOS", marca: "DESCARPAC", min: 1 },
+            "DETERGENTE ENZIMATICO": { cat: "DIVERSOS", marca: "Zymedet Gold", min: 1 },
+            "EDTA": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "ELASTICO BENGALINA AMARELO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL BEBÊ ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA AZUL CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO BENGALINA AZUL MARINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA BRANCO RENDA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA CINZA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA LARANJA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO BENGALINA LILÁS ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA MARFIM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA PINK CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA PRATEADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA PRETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA ROSA": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROSA BEBÊ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROSA PEROLADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA ROXO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA UVA CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA VERDE LIMÃO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE MAR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE MUSGO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERDE PEROLA ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VERMELHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO BENGALINA VERMELHO CRISTAL": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO BENGALINA VINHO": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL LEVE 1/4": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL LEVE 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL LEVE 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL LEVE 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL MÉDIO 1/4": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL MÉDIO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL MÉDIO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL MÉDIO 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL PESADO 1/4  ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL PESADO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELASTICO INTRAORAL PESADO 3/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "ELASTICO INTRAORAL PESADO 5/16": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "ELÁSTICO CORRENTE AMARELO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AMARELO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL BEBE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL BEBE MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL MARINHO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL MARINHO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE AZUL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE BRANCO RENDA CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE BRANCO RENDA MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE CINZA CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE CINZA MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE LARANJA  CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE LARANJA CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE LILAS CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE LILAS MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE MARFIM CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE MARFIM MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PEARL BLUE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PEARL BLUE MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PINK CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PINK CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRATEADO CURTO ": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRATEADO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRETO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE PRETO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROSA BEBE CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROSA BEBE MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROSA PEROLA CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROSA PEROLA MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROXO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE ROXO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE LIMAO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE LIMAO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE MAR CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE MAR MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE MUSGO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE MUSGO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE PEROLA CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERDE PEROLA MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERMELHO CRISTAL CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERMELHO CRISTAL MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERMELHO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VERMELHO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VINHO CURTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELÁSTICO CORRENTE VINHO MEDIO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO INTRAORAL MÉDIO 1/8": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ELASTICO ROTATION": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "EMBALAGEM PARA ELASTICO": { cat: "ORTODONTIA", marca: "MAQUIRA", min: 2 },
+            "Escova de Robson": { cat: "DENTÍSTICA", marca: "ALLPRIME", min: 40 },
+            "EXTRATOR DE ELASTICO 10": { cat: "ORTODONTIA", marca: "", min: 10 },
+            "ESLASTICO CORRENTE CINZA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ESLASTICO CORRENTE PRETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "espatula de resina almore kota ": { cat: "DENTÍSTICA", marca: "FAVA", min: 1 },
+            "ESPELHO BUCAL COMPLETO": { cat: "DIVERSOS", marca: "FAVA", min: 10 },
+            "EUGENOL": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "EUCALIPTOL": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "f1 DENTSPLY": { cat: "ENDODONTIA", marca: "", min: 2 },
+            "Filme Adulto": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
+            "Filme Infantil": { cat: "DENTÍSTICA", marca: "CARESTEA", min: 1 },
+            "FIO AÇO 12 INFERIOR -50": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 12 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 14 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 14 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16X22 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 16X22 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 17X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 17X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 18 INFERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 18 SUPERIOR ": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 18X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 18X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 19X25 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 19X25 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO AÇO 20 INFERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO AÇO 20 SUPERIOR": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO DE SUTURA 3-0 NYLON": { cat: "CIRURGIA", marca: "PROCARE", min: 3 },
+            "Fio dental": { cat: "DENTÍSTICA", marca: "HILLO", min: 1 },
+            "FIO NITI 12 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 12 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 14 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 14 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X16  INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X16  SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 16X22  INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 16X22 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 17X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 17X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 18 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 18 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 18X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 18X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 19X25 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 19X25 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 3 },
+            "FIO NITI 20 INFERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO NITI 20 SUPERIOR 100UN": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "FIO RETRATOR 00": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 1 },
+            "FIO RETRATOR 000": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 1 },
+            "FIXADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 1 },
+            "Flúor": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 1 },
+            "GANCHO PONTA BOLA RETO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "GAZE HIDROFILICA": { cat: "DIVERSOS", marca: "ULTRACOTT", min: 2 },
+            "Gel dessensibilizante": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 2 },
+            "GELINHOS": { cat: "DIVERSOS", marca: "-", min: 20 },
+            "GESSO TIPO III AMARELO": { cat: "DIVERSOS", marca: "ASFER", min: 2 },
+            "GESSO TIPO IV ROSA HEROSTONE": { cat: "DIVERSOS", marca: "VIGODENT", min: 2 },
+            "grampo de isolamento numero 200   14a   28": { cat: "ENDODONTIA", marca: "SS WHITE", min: 1 },
+            "GRAU CIRURGICO 20X100": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "GRAU CIRURGICO 30X100": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "GUTAPERCHA  ACESSORIA": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "GUTAPERCHA ROSA ACESSORIA FM": { cat: "ENDODONTIA", marca: "TANARI", min: 1 },
+            "GUTAPERCHA UNIVERSAL F1": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "HEMOSPOM ": { cat: "CIRURGIA", marca: "MAQUIRA", min: 1 },
+            "Hidróxido de Cálcio P.A.": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 2 },
+            "HYDCAL": { cat: "ENDODONTIA", marca: "HYDCAL", min: 2 },
+            "Inômino de vidro pó/liquído": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 1 },
+            "Integrador quimico  monitoramento de esterilização": { cat: "DIVERSOS", marca: "CLEAN UP", min: 5 },
+            "Integrador biologico monitoramento de esterilização": { cat: "DIVERSOS", marca: "CLEAN UP", min: 5 },
+            "JOGO DE MOLDEIRAS PARCIAL DE ALUMINIO": { cat: "DIVERSOS", marca: "TECNODENT", min: 1 },
+            "KIT ENDO IRRIGAÇÃO ENDO ": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 1 },
+            "Kit disco de lixa (diamond pro )": { cat: "DENTÍSTICA", marca: "", min: 1 },
+            "KIT SOMENTE SERINGA DE IRRIGAÇÃO E ASPIRAÇÃO COM 10": { cat: "ENDODONTIA", marca: "ULTADENT", min: 5 },
+            "LÂMINA DE BISTURI Nº12": { cat: "CIRURGIA", marca: "SOLIDOR", min: 1 },
+            "LÂMINA DE BISTURI Nº15": { cat: "CIRURGIA", marca: "SOLIDOR", min: 1 },
+            "LENCOL DE BORRACHA": { cat: "ENDODONTIA", marca: "MADEITEX", min: 1 },
+            "LIDOSTESIN (LIDOCAIÍNA) - TUBETE PLÁSTICO": { cat: "DIVERSOS", marca: "SSWHITE", min: 4 },
+            "LIMA K  ENDODONTICA 10 25MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "lima k 10 ": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "lima k 15 ": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 3 },
+            "LIMA K ENDODONTICA 15 31 MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "LIMA K ENDODONTICA 25 MM": { cat: "ENDODONTIA", marca: "ALL PRIME", min: 2 },
+            "Lixa Abrasiva de Metal": { cat: "DENTÍSTICA", marca: "INJECTA", min: 2 },
+            "Lixa Abrasiva de Papel": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 2 },
+            "LUBRIFICANTE DE MOTOR": { cat: "DIVERSOS", marca: "ALL PRIME", min: 1 },
+            "LUVA CIRURGICA 6,5": { cat: "CIRURGIA", marca: "DESCARPAK", min: 30 },
+            "MÁSCARA DESCARTÁVEL caixa 50": { cat: "DIVERSOS", marca: "SP", min: 4 },
+            "Micro Brush": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 4 },
+            "Microbrush extra fino": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 1 },
+            "MINI ESPORÃO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "MOLA ABERTA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "MOLA FECHADA": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "Obturador Provisório": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 1 },
+            "PARAMONO": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "Pasta de Zinco": { cat: "DENTÍSTICA", marca: "LYSANDA", min: 1 },
+            "Pasta Profilática": { cat: "DENTÍSTICA", marca: "ALL PRIME", min: 3 },
+            "Pedra Pomes": { cat: "DENTÍSTICA", marca: "SSWHITE", min: 1 },
+            "Pino de Fibra de Vidro 0,5": { cat: "DENTÍSTICA", marca: "SUPERPOST", min: 1 },
+            "Pino de Fibra de Vidro 1,0": { cat: "DENTÍSTICA", marca: "SUPERPOST", min: 1 },
+            "PLACA DE CLAREAMENTO 1MM": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 2 },
+            "PONTA PAPEL 35-40": { cat: "ENDODONTIA", marca: "MKLIFE", min: 1 },
+            "Resina Acrílica incolor": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Resina Auto": { cat: "DENTÍSTICA", marca: "DENCOR", min: 1 },
+            "Resina FORMA Opaca ": { cat: "DENTÍSTICA", marca: "ULTRADENT", min: 1 },
+            "Resina LLIS - DA2": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina LLIS- DA3": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina LLIS- DA4": { cat: "DENTÍSTICA", marca: "FGM", min: 1 },
+            "Resina Master Flow A2 - ": { cat: "DENTÍSTICA", marca: "BIODINAMIC", min: 2 },
+            "RESINA ORTHOCEM": { cat: "ORTODONTIA", marca: "FGM", min: 3 },
+            "Resina Z100 - A1": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
+            "Resina Z100 - A2": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 2 },
+            "Resina Z100 - A3": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 4 },
+            "Resina Z100 - A3.5": { cat: "DENTÍSTICA", marca: "SOLVENTUM", min: 4 },
+            "REVELADOR": { cat: "ENDODONTIA", marca: "CARESTEA", min: 2 },
+            "Selante max seal": { cat: "DENTÍSTICA", marca: "MAQUIRA", min: 2 },
+            "SERINGAS 20ML": { cat: "DIVERSOS", marca: "DESCARPAK", min: 2 },
+            "SERINGAS 3ML botox": { cat: "DIVERSOS", marca: "DESCARPAK", min: 1 },
+            "Silano": { cat: "DENTÍSTICA", marca: "VILLEVIE", min: 1 },
+            "Silicone Optozil (ACTIVADOR)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "Silicone Optozil (DENSO)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "Silicone Optozil (LEVE)": { cat: "DENTÍSTICA", marca: "KULZER", min: 1 },
+            "SODA CLORADA": { cat: "ENDODONTIA", marca: "ASFER", min: 1 },
+            "SOFT REEMBASADOR": { cat: "DIVERSOS", marca: "TDV", min: 1 },
+            "SOLUCAO DE MILTON": { cat: "ENDODONTIA", marca: "ASFER", min: 1 },
+            "SOLUÇÃO HEMOSTÁTICA": { cat: "CIRURGIA", marca: "MAQUIRA", min: 1 },
+            "SORO FISIOLOGICO 500ML": { cat: "CIRURGIA", marca: "-", min: 3 },
+            "STOP ABERTO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "STOP FECHADO": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "SUGADOR CIRURGICO caixa com 40 unidades": { cat: "CIRURGIA", marca: "MAQUIRA", min: 3 },
+            "sugador endodontico descartavel ": { cat: "ENDODONTIA", marca: "SS PLUS", min: 3 },
+            "SUGADOR TRANSPARENTE": { cat: "DIVERSOS", marca: "ALL PRIME", min: 17 },
+            "TESTE DE VITALIDADE": { cat: "ENDODONTIA", marca: "MAQUIRA", min: 1 },
+            "Tira matriz de Poliéster Transparente ": { cat: "DENTÍSTICA", marca: "k dent", min: 2 },
+            "Top Dam": { cat: "DENTÍSTICA", marca: "ALLPLAN", min: 2 },
+            "TOUCA BRANCA": { cat: "DIVERSOS", marca: "DESCARPAK", min: 1 },
+            "TRICESOL": { cat: "ENDODONTIA", marca: "BIODINAMICA", min: 1 },
+            "TUBO  COLAGEM SIMPLES 36/37 COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 16/17 COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 26/27COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO COLAGEM SIMPLES 46/47COLAGEM": { cat: "ORTODONTIA", marca: "MORELLI", min: 2 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 17": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 27": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM  ROTH 022 N 47": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO DUPLO COLAGEM ROTH 022 N 37": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 16": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 26": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 36": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "TUBO TRIPLO COLAGEM  ROTH 022 N 46": { cat: "ORTODONTIA", marca: "MORELLI", min: 1 },
+            "ULTRACALL": { cat: "ENDODONTIA", marca: "ULTRADENT", min: 2 },
+            "VASELINA SOLIDA": { cat: "DIVERSOS", marca: "RIO QUIMICA", min: 1 }
+        };
+
+        // --- UTILITÁRIOS VISUAIS ---
+        window.showLoading = (show) => { document.getElementById('loading-overlay').style.display = show ? 'flex' : 'none'; }
+        
+        window.showAlert = (msg) => {
+            const box = document.getElementById('alert-box');
+            document.getElementById('alert-message').textContent = msg;
+            box.classList.remove('hidden');
+            setTimeout(() => box.classList.add('hidden'), 5000); 
+        }
+
+        window.goToPage = (pageId) => {
+            document.querySelectorAll('.page').forEach(p => p.style.display = 'none');
+            const page = document.getElementById(pageId);
+            if(page) page.style.display = pageId.includes('select-filial') || pageId.includes('login') ? 'flex' : 'block';
+            window.scrollTo(0,0);
+            if(window.lucide) lucide.createIcons();
+            if(pageId === 'page-manage-stock') renderStockTable();
+            if(pageId === 'page-order-form') renderOrderTable();
+        }
+
+        // --- LÓGICA FIREBASE ---
+        async function loadFilialData() {
+            showLoading(true);
+            try {
+                const docRef = doc(db, "estoques", selectedFilial);
+                const docSnap = await getDoc(docRef);
+
+                if (docSnap.exists()) {
+                    filialInventory = docSnap.data().items;
+                } else {
+                    filialInventory = {};
+                    // Se não tiver dados, carrega do catálogo novo
+                    if(typeof INITIAL_CATALOG !== 'undefined') {
+                        for (const [desc, item] of Object.entries(INITIAL_CATALOG)) {
+                            filialInventory[desc] = {
+                                descricao: desc,
+                                categoria: item.cat,
+                                marca: item.marca,
+                                minimo: item.min,
+                                estoque: 0
+                            };
+                        }
+                    }
+                    await setDoc(doc(db, "estoques", selectedFilial), { items: filialInventory });
+                }
+            } catch (error) {
+                console.error(error);
+                showAlert("Erro: " + error.message);
+            }
+            showLoading(false);
+        }
+
+        window.saveStock = async () => {
+            showLoading(true);
+            try {
+                await setDoc(doc(db, "estoques", selectedFilial), { items: filialInventory });
+                showAlert("Salvo com sucesso!");
+                goToPage('page-menu');
+            } catch (error) {
+                showAlert("Erro ao salvar: " + error.message);
+            }
+            showLoading(false);
+        }
+
+        // FUNÇÃO PARA RESETAR O ESTOQUE COM A NOVA LISTA (Botão Novo no Admin)
+        window.resetStockToCatalog = async () => {
+            const pwd = prompt("ATENÇÃO: Isso apagará todas as contagens atuais e carregará a NOVA LISTA de produtos. Digite a senha mestre para confirmar:");
+            if(pwd !== MASTER_PASSWORD) return showAlert("Senha incorreta!");
+
+            // Pergunta qual filial resetar (ou reseta todas se quiser, mas vamos focar na atual se estiver logado, ou pede input)
+            // Como estamos no Admin, não temos necessariamente uma filial selecionada no contexto global se o admin logou direto sem passar pela filial.
+            // Mas vamos assumir que queremos limpar TUDO ou pedir o nome.
+            
+            const filialToReset = prompt("Digite o nome da Filial para aplicar a nova lista (ex: Patos de Minas):");
+            if(!filialToReset) return;
+
+            showLoading(true);
+            try {
+                // Deleta o documento antigo
+                await deleteDoc(doc(db, "estoques", filialToReset));
+                
+                // Recria com o novo catálogo
+                const newInventory = {};
+                for (const [desc, item] of Object.entries(INITIAL_CATALOG)) {
+                    newInventory[desc] = {
+                        descricao: desc,
+                        categoria: item.cat,
+                        marca: item.marca,
+                        minimo: item.min,
+                        estoque: 0
+                    };
+                }
+                await setDoc(doc(db, "estoques", filialToReset), { items: newInventory });
+                showAlert(`Sucesso! A lista nova foi aplicada para ${filialToReset}.`);
+            } catch (error) {
+                console.error(error);
+                showAlert("Erro ao resetar: " + error.message);
+            }
+            showLoading(false);
+        }
+
+        // --- IMPORTAÇÃO DE CATÁLOGO (CSV/JSON) POR FILIAL ---
+        // Objetivo: carregar a lista de produtos (cat/marca/mínimo) e MERGEAR no estoque, preservando o campo "estoque".
+        window.openImportCatalog = () => {
+            const defaultFilial = window.selectedFilial || "";
+            const filialToImport = prompt("Digite o nome da Filial para IMPORTAR o catálogo (ex: Ibiá):", defaultFilial);
+            if (!filialToImport) return;
+            window.__importTargetFilial = filialToImport.trim();
+            const input = document.getElementById("import-catalog-file");
+            if (!input) return showAlert("Input de importação não encontrado.");
+            input.value = "";
+            input.click();
+        };
+
+        function normalizeHeader(h) {
+            return String(h || "")
+                .trim()
+                .toLowerCase()
+                .normalize("NFD")
+                .replace(/[\u0300-\u036f]/g, "");
+        }
+
+        function parseCsvLine(line, delimiter) {
+            // Parser simples com suporte a aspas duplas
+            const out = [];
+            let cur = "";
+            let inQuotes = false;
+            for (let i = 0; i < line.length; i++) {
+                const ch = line[i];
+                if (ch === '"') {
+                    if (inQuotes && line[i + 1] === '"') { // escape ""
+                        cur += '"';
+                        i++;
+                    } else {
+                        inQuotes = !inQuotes;
+                    }
+                } else if (ch === delimiter && !inQuotes) {
+                    out.push(cur);
+                    cur = "";
+                } else {
+                    cur += ch;
+                }
+            }
+            out.push(cur);
+            return out.map(v => v.trim());
+        }
+
+        function parseCatalogCSV(csvText) {
+            const text = String(csvText || "").replace(/^\uFEFF/, "");
+            const lines = text.split(/\r?\n/).map(l => l.trim()).filter(l => l.length > 0);
+            if (lines.length < 2) throw new Error("CSV vazio ou inválido.");
+
+            const header = lines[0];
+            const commaCount = (header.match(/,/g) || []).length;
+            const semiCount = (header.match(/;/g) || []).length;
+            const delimiter = semiCount > commaCount ? ";" : ",";
+
+            const headers = parseCsvLine(header, delimiter);
+            const norm = headers.map(normalizeHeader);
+
+            const idxDesc = norm.findIndex(h => h.includes("descricao") || h.includes("descricao do item") || h.includes("item"));
+            const idxCat  = norm.findIndex(h => h === "categoria" || h.includes("categoria"));
+            const idxMarca= norm.findIndex(h => h === "marca" || h.includes("marca"));
+            const idxMin  = norm.findIndex(h => h.includes("quantidade minima") || h.includes("qtd minima") || h.includes("minimo") || h.includes("min"));
+
+            if (idxDesc < 0) throw new Error("Não encontrei a coluna de descrição no CSV (ex: 'Descrição do Item').");
+            if (idxMin < 0) throw new Error("Não encontrei a coluna de mínimo no CSV (ex: 'Quantidade mínima mensal').");
+
+            const items = {};
+            for (let i = 1; i < lines.length; i++) {
+                const cols = parseCsvLine(lines[i], delimiter);
+                const desc = (cols[idxDesc] || "").trim();
+                if (!desc) continue;
+
+                const cat = idxCat >= 0 ? (cols[idxCat] || "").trim() : "";
+                const marca = idxMarca >= 0 ? (cols[idxMarca] || "").trim() : "";
+                const minRaw = (cols[idxMin] || "").trim();
+
+                const min = Number(String(minRaw).replace(/[^0-9-]/g, "")) || 0;
+
+                items[desc] = { cat, marca, min };
+            }
+            return items;
+        }
+
+        window.handleImportCatalogFile = async (event) => {
+            const file = event?.target?.files?.[0];
+            if (!file) return;
+
+            const filial = (window.__importTargetFilial || window.selectedFilial || "").trim();
+            if (!filial) return showAlert("Nenhuma filial definida para importação.");
+
+            showLoading(true);
+            try {
+                const raw = await file.text();
+                const name = (file.name || "").toLowerCase();
+
+                let imported = {};
+                if (name.endsWith(".json")) {
+                    const data = JSON.parse(raw);
+                    // Aceita {items:{...}} ou direto {...}
+                    imported = data?.items && typeof data.items === "object" ? data.items : data;
+                } else if (name.endsWith(".csv")) {
+                    imported = parseCatalogCSV(raw);
+                } else {
+                    throw new Error("Formato não suportado. Use CSV ou JSON.");
+                }
+
+                // Normaliza para {desc: {cat,marca,min}}
+                const normalized = {};
+                if (Array.isArray(imported)) {
+                    for (const row of imported) {
+                        const desc = String(row?.descricao || row?.["Descrição do Item"] || "").trim();
+                        if (!desc) continue;
+                        normalized[desc] = {
+                            cat: String(row?.cat || row?.categoria || "").trim(),
+                            marca: String(row?.marca || "").trim(),
+                            min: Number(row?.min || row?.minimo || 0) || 0
+                        };
+                    }
+                } else {
+                    for (const [desc, v] of Object.entries(imported || {})) {
+                        const d = String(desc || "").trim();
+                        if (!d) continue;
+                        normalized[d] = {
+                            cat: String(v?.cat || v?.categoria || "").trim(),
+                            marca: String(v?.marca || "").trim(),
+                            min: Number(v?.min ?? v?.minimo ?? 0) || 0
+                        };
+                    }
+                }
+
+                const total = Object.keys(normalized).length;
+                if (!total) throw new Error("Nenhum item foi encontrado no arquivo importado.");
+
+                // 1) Salva catálogo separado (por filial)
+                await setDoc(doc(db, "catalogos", filial), {
+                    items: normalized,
+                    updatedAt: Date.now()
+                }, { merge: true });
+
+                // 2) Merge no estoque preservando "estoque"
+                const estoqueRef = doc(db, "estoques", filial);
+                const snap = await getDoc(estoqueRef);
+                const currentItems = snap.exists() ? (snap.data().items || {}) : {};
+
+                const mergedItems = { ...currentItems };
+                let added = 0;
+                let updated = 0;
+
+                for (const [desc, v] of Object.entries(normalized)) {
+                    const existing = currentItems[desc];
+                    if (existing) {
+                        mergedItems[desc] = {
+                            ...existing,
+                            descricao: desc,
+                            categoria: v.cat || existing.categoria || "",
+                            marca: v.marca || existing.marca || "",
+                            minimo: Number(v.min) || Number(existing.minimo) || 0
+                        };
+                        updated++;
+                    } else {
+                        mergedItems[desc] = {
+                            descricao: desc,
+                            categoria: v.cat || "",
+                            marca: v.marca || "",
+                            minimo: Number(v.min) || 0,
+                            estoque: 0
+                        };
+                        added++;
+                    }
+                }
+
+                await setDoc(estoqueRef, { items: mergedItems }, { merge: true });
+
+                showAlert(`Importação concluída para "${filial}". Total no arquivo: ${total} | Novos: ${added} | Atualizados: ${updated}. (Estoque preservado)`);
+                if (typeof refreshAdminPanel === "function") refreshAdminPanel();
+            } catch (e) {
+                console.error(e);
+                showAlert("Erro ao importar: " + (e?.message || e));
+            } finally {
+                showLoading(false);
+                window.__importTargetFilial = null;
+                try { event.target.value = ""; } catch {}
+            }
+        };
+
+
+        window.submitOrder = async () => {
+            if(!selectedFilial) {
+                showAlert("Erro: Nenhuma filial selecionada.");
+                return;
+            }
+            if(Object.keys(currentOrder).length === 0 && !currentExtraItems) return showAlert("Pedido vazio!");
+
+            showLoading(true);
+            const order = {
+                filial: selectedFilial,
+                createdAt: new Date().toISOString(),
+                items: currentOrder,
+                extraItems: currentExtraItems,
+                status: 'Pendente',
+                timestamp: Date.now()
+            };
+            
+            try {
+                await addDoc(collection(db, "pedidos"), order);
+                window.currentOrder = {};
+                window.currentExtraItems = "";
+                document.getElementById('extra-items-textarea').value = "";
+                showAlert("Pedido enviado!");
+                await renderClinicHistory(); 
+            } catch (error) {
+                console.error("Erro envio:", error);
+                showAlert("Erro no envio: " + error.message);
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        window.renderClinicHistory = async () => {
+            showLoading(true);
+            const list = document.getElementById('clinic-history-list');
+            list.innerHTML = '';
+            
+            try {
+                const q = query(collection(db, "pedidos"), where("filial", "==", selectedFilial), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+                
+                if(querySnapshot.empty) {
+                    list.innerHTML = '<p class="text-center text-gray-400 py-8">Nenhum pedido encontrado.</p>';
+                }
+                
+                window.tempHistory = [];
+                querySnapshot.forEach((doc) => {
+                    const order = doc.data();
+                    window.tempHistory.push({id: doc.id, data: order});
+                    
+                    let statusClass = "bg-yellow-100 text-yellow-800 border-yellow-200";
+                    let icon = "clock";
+                    if(order.status === 'Aprovado') { statusClass = "bg-green-100 text-green-800 border-green-200"; icon = "check-circle"; }
+                    if(order.status === 'Rejeitado') { statusClass = "bg-red-100 text-red-800 border-red-200"; icon = "x-circle"; }
+
+                    const div = document.createElement('div');
+                    div.className = "bg-white p-4 rounded-xl shadow-sm border border-gray-100 hover:shadow-md transition-shadow";
+                    div.innerHTML = `
+                        <div class="flex justify-between items-start mb-3">
+                            <div>
+                                <p class="text-sm text-gray-500">${new Date(order.createdAt).toLocaleDateString()} às ${new Date(order.createdAt).toLocaleTimeString().slice(0,5)}</p>
+                                <span class="inline-flex items-center gap-1 px-2 py-1 rounded text-xs font-bold uppercase mt-1 ${statusClass}">
+                                    <i data-lucide="${icon}" class="w-3 h-3"></i> ${order.status}
+                                </span>
+                            </div>
+                            <button onclick="printOrderFromHistory('${doc.id}')" class="text-gray-400 hover:text-blue-600"><i data-lucide="printer" class="w-5 h-5"></i></button>
+                        </div>
+                        <div class="text-sm text-gray-600 border-t pt-2">
+                             ${Object.entries(order.items).map(([k,v]) => `<span class="inline-block bg-gray-50 px-2 py-1 rounded mr-1 mb-1 border border-gray-100 text-xs">${v}x ${k}</span>`).join('')}
+                             ${order.extraItems ? `<p class="mt-2 text-xs italic text-gray-500 bg-yellow-50 p-2 rounded">Obs: ${order.extraItems}</p>` : ''}
+                        </div>
+                    `;
+                    list.appendChild(div);
+                });
+                if(window.lucide) lucide.createIcons();
+            } catch (error) {
+                console.error(error);
+                showAlert("Erro histórico: " + error.message);
+            }
+            showLoading(false);
+        }
+
+        window.printOrderFromHistory = (id) => {
+            const orderObj = window.tempHistory.find(o => o.id === id);
+            if(orderObj) printOrder(orderObj.data.items, orderObj.data.extraItems, orderObj.data.createdAt);
+        }
+
+        window.loadAdminPanel = async () => {
+            showLoading(true);
+            const container = document.getElementById('admin-list-container');
+            container.innerHTML = '';
+            let hasOrders = false;
+
+            try {
+                const q = query(collection(db, "pedidos"), where("status", "==", "Pendente"), orderBy("timestamp", "desc"));
+                const querySnapshot = await getDocs(q);
+
+                querySnapshot.forEach((doc) => {
+                    hasOrders = true;
+                    const order = doc.data();
+                    const orderId = doc.id;
+
+                    const div = document.createElement('div');
+                    div.className = "bg-white p-6 rounded-xl shadow-md border-l-4 border-yellow-400";
+                    div.innerHTML = `
+                        <div class="flex flex-col md:flex-row justify-between mb-4 border-b pb-2">
+                            <h3 class="font-bold text-lg text-blue-800">${order.filial}</h3>
+                            <span class="text-gray-500 text-sm">${new Date(order.createdAt).toLocaleString()}</span>
+                        </div>
+                        <div class="mb-4">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 gap-2 text-sm text-gray-700">
+                                ${Object.entries(order.items).map(([k,v]) => `<li class="flex justify-between bg-gray-50 p-2 rounded"><span>${k}</span><span class="font-bold">${v}</span></li>`).join('')}
+                            </ul>
+                            ${order.extraItems ? `<div class="mt-3 p-3 bg-yellow-50 rounded text-sm italic text-gray-600 border border-yellow-100"><strong>Obs:</strong> ${order.extraItems}</div>` : ''}
+                        </div>
+                        <div class="flex gap-3 pt-2">
+                            <button onclick="updateStatus('${orderId}', 'Aprovado')" class="flex-1 bg-green-100 text-green-700 px-4 py-3 rounded-lg font-bold hover:bg-green-200 transition-colors flex justify-center gap-2"><i data-lucide="check" class="w-5 h-5"></i> Aprovar</button>
+                            <button onclick="updateStatus('${orderId}', 'Rejeitado')" class="flex-1 bg-red-100 text-red-700 px-4 py-3 rounded-lg font-bold hover:bg-red-200 transition-colors flex justify-center gap-2"><i data-lucide="x" class="w-5 h-5"></i> Rejeitar</button>
+                        </div>
+                    `;
+                    container.appendChild(div);
+                });
+                if(window.lucide) lucide.createIcons();
+            } catch (error) {
+                showAlert("Erro admin: " + error.message);
+            }
+
+            document.getElementById('no-pending-orders').style.display = hasOrders ? 'none' : 'block';
+            showLoading(false);
+        }
+
+        window.updateStatus = async (orderId, newStatus) => {
+            showLoading(true);
+            try {
+                await updateDoc(doc(db, "pedidos", orderId), { status: newStatus });
+                showAlert(`Pedido ${newStatus}!`);
+                loadAdminPanel();
+            } catch (error) {
+                showAlert("Erro ao atualizar: " + error.message);
+            }
+            showLoading(false);
+        }
+        
+        window.refreshAdminPanel = () => { loadAdminPanel(); }
+
+        // --- MANIPULAÇÃO DE DADOS (Group & Render) ---
+        function groupProducts(list) {
+            const grouped = {};
+            list.forEach(p => {
+                if(!grouped[p.categoria]) grouped[p.categoria] = [];
+                grouped[p.categoria].push(p);
+            });
+            return grouped;
+        }
+
+        window.unlockMinimums = () => {
+            const pwd = prompt("Senha Mestra para alterar mínimos:");
+            if (pwd === MASTER_PASSWORD) {
+                minUnlocked = true;
+                showAlert("Desbloqueado!");
+                renderStockTable(); 
+                const btn = document.getElementById('btn-unlock');
+                btn.classList.remove('bg-gray-200', 'text-gray-600');
+                btn.classList.add('bg-green-200', 'text-green-800');
+            } else if (pwd !== null) {
+                showAlert("Senha incorreta!");
+            }
+        }
+
+        // RENDER OTIMIZADO (Corrige o visual e lentidão)
+        function renderStockTable() {
+            const tbody = document.getElementById('stock-table-body');
+            const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
+            const grouped = groupProducts(list);
+            
+            let htmlBuffer = '';
+
+            for (const [cat, prods] of Object.entries(grouped).sort()) {
+                // CATEGORIA (Sem Sticky para não encavalar)
+                htmlBuffer += `<tr class="bg-gray-100"><td colspan="4" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
+                prods.forEach(p => {
+                    const disabledAttr = minUnlocked ? '' : 'disabled';
+                    const bgClass = minUnlocked ? 'bg-white' : 'bg-gray-100 text-gray-400 cursor-not-allowed';
+
+                    htmlBuffer += `
+                        <tr class="border-b hover:bg-blue-50 transition-colors">
+                            <td class="px-4 py-3 align-middle">
+                                <div class="text-sm font-medium text-gray-800 leading-tight">${p.descricao}</div>
+                                <div class="text-[10px] text-gray-400 mt-0.5">${p.marca}</div>
+                            </td>
+                            <td class="text-center align-middle p-1">
+                                <input type="number" ${disabledAttr} class="w-14 h-8 border rounded text-center text-sm outline-none focus:border-blue-500 ${bgClass}" value="${p.minimo}" onchange="updateLocalProduct('${p.descricao}', 'minimo', this.value)">
+                            </td>
+                            <td class="text-center align-middle p-1">
+                                <input type="number" class="w-14 h-8 border rounded text-center text-sm font-bold text-blue-600 outline-none focus:border-blue-500 bg-white" value="${p.estoque}" onchange="updateLocalProduct('${p.descricao}', 'estoque', this.value)">
+                            </td>
+                            <td class="text-center align-middle"><button class="text-red-300 hover:text-red-600 p-2" onclick="removeProduct('${p.descricao}')"><i data-lucide="trash-2" class="w-4 h-4"></i></button></td>
+                        </tr>
+                    `;
+                });
+            }
+            tbody.innerHTML = htmlBuffer;
+            if(window.lucide) lucide.createIcons();
+        }
+
+        window.updateLocalProduct = (desc, field, val) => {
+            if(filialInventory[desc]) filialInventory[desc][field] = parseInt(val) || 0;
+        }
+
+        window.removeProduct = (desc) => {
+            if(confirm("Remover este produto?")) {
+                delete filialInventory[desc];
+                renderStockTable();
+            }
+        }
+
+        function renderOrderTable() {
+            const tbody = document.getElementById('order-table-body');
+            const list = Object.values(filialInventory).sort((a,b) => a.descricao.localeCompare(b.descricao));
+            const grouped = groupProducts(list);
+            
+            let htmlBuffer = '';
+
+            for (const [cat, prods] of Object.entries(grouped).sort()) {
+                htmlBuffer += `<tr class="bg-gray-100"><td colspan="5" class="px-4 py-2 font-bold text-xs uppercase text-gray-700 tracking-wider">${cat}</td></tr>`;
+                prods.forEach(p => {
+                    const sug = Math.max(0, p.minimo - p.estoque);
+                    const highlight = sug > 0 ? "bg-red-50" : "";
+                    
+                    htmlBuffer += `
+                        <tr class="border-b hover:bg-blue-50 transition-colors ${highlight}">
+                            <td class="px-4 py-3 align-middle">
+                                <div class="text-sm font-medium text-gray-800 leading-tight">${p.descricao}</div>
+                                <div class="text-[10px] text-gray-400 mt-0.5">${p.marca}</div>
+                            </td>
+                            <td class="text-center text-xs text-gray-400">${p.minimo}</td>
+                            <td class="text-center text-xs text-gray-400">${p.estoque}</td>
+                            <td class="text-center font-bold text-sm ${sug>0?'text-red-600':'text-gray-300'}">${sug}</td>
+                            <td class="text-center align-middle p-1"><input type="number" class="w-16 h-9 border rounded-lg text-center text-sm order-qtd outline-none focus:ring-2 focus:ring-blue-500 ${sug>0?'bg-white font-bold border-red-200':''}" data-desc="${p.descricao}" value="${sug}"></td>
+                        </tr>
+                    `;
+                });
+            }
+            tbody.innerHTML = htmlBuffer;
+        }
+
+        window.reviewOrder = () => {
+            currentOrder = {};
+            document.querySelectorAll('.order-qtd').forEach(el => {
+                const qtd = parseInt(el.value);
+                if(qtd > 0) currentOrder[el.dataset.desc] = qtd;
+            });
+            currentExtraItems = document.getElementById('extra-items-textarea').value;
+            
+            const div = document.getElementById('review-summary-container');
+            if(Object.keys(currentOrder).length === 0 && !currentExtraItems) {
+                div.innerHTML = '<p class="text-gray-500 italic text-center py-4">Nenhum item selecionado.</p>';
+            } else {
+                let html = '<ul class="divide-y divide-gray-100">';
+                for(const [k,v] of Object.entries(currentOrder)) {
+                    html += `<li class="flex justify-between py-2 text-sm"><span>${k}</span><span class="font-bold text-blue-700">${v}</span></li>`;
+                }
+                html += '</ul>';
+                if(currentExtraItems) html += `<div class="mt-4 p-3 bg-yellow-50 rounded text-sm italic border border-yellow-100"><strong class="block text-yellow-800 not-italic mb-1">Extras:</strong>${currentExtraItems}</div>`;
+                div.innerHTML = html;
+            }
+            goToPage('page-review-order');
+        }
+
+        window.filterTable = (input, tbody) => {
+            const term = document.getElementById(input).value.toLowerCase();
+            const rows = document.getElementById(tbody).querySelectorAll('tr');
+            rows.forEach(r => {
+                if(!r.cells[0]) return; 
+                const txt = r.innerText.toLowerCase();
+                r.style.display = txt.includes(term) ? '' : 'none';
+            });
+        }
+        
+        // --- LOGINS ---
+        window.goToLogin = (f) => { 
+            selectedFilial = f;
+            localStorage.setItem('lastFilial', f); 
+            document.getElementById('login-filial-name').innerText = f; 
+            document.getElementById('filial-password').value = '';
+            goToPage('page-login'); 
+            setTimeout(() => document.getElementById('filial-password').focus(), 100);
+        }
+
+        window.handleFilialLogin = () => { 
+            if(document.getElementById('filial-password').value === FILIAL_PASSWORDS[selectedFilial]) { 
+                loadFilialData(); 
+                document.getElementById('menu-filial-name').innerText = selectedFilial; 
+                goToPage('page-menu'); 
+            } else { 
+                showAlert("Senha incorreta!"); 
+            } 
+        }
+
+        window.goToAdminLogin = () => {
+            document.getElementById('admin-password').value = '';
+            goToPage('page-admin-login'); 
+            setTimeout(() => document.getElementById('admin-password').focus(), 100);
+        }
+
+        window.handleAdminLogin = () => { 
+            if(document.getElementById('admin-password').value === ADMIN_PASSWORD) { 
+                loadAdminPanel(); 
+                goToPage('page-admin-panel'); 
+            } else { 
+                showAlert("Senha incorreta!"); 
+            } 
+        }
+        
+        window.logout = () => {
+            window.selectedFilial = null;
+            minUnlocked = false; 
+            const btn = document.getElementById('btn-unlock');
+            if(btn) {
+                btn.classList.add('bg-gray-200', 'text-gray-600');
+                btn.classList.remove('bg-green-200', 'text-green-800');
+            }
+
+            localStorage.removeItem('lastFilial');
+            document.getElementById('filial-password').value = '';
+            document.getElementById('admin-password').value = '';
+            goToPage('page-select-filial');
+        }
+        
+        document.getElementById('filial-password').addEventListener('keyup', (e) => {
+            if(e.key === 'Enter') handleFilialLogin();
+        });
+        document.getElementById('admin-password').addEventListener('keyup', (e) => {
+            if(e.key === 'Enter') handleAdminLogin();
+        });
+
+        // --- IMPRESSÃO ---
+        window.printOrder = (items, extras, date = null) => {
+            const area = document.getElementById('print-area');
+            const dateStr = date ? new Date(date).toLocaleString() : new Date().toLocaleString();
+            
+            let html = `
+                <div class="print-header">
+                    <div class="print-title">Pedido de Materiais</div>
+                    <div class="print-meta">${selectedFilial} - ${dateStr}</div>
+                </div>
+                <div class="print-grid">
+            `;
+            for(const [k,v] of Object.entries(items)) {
+                html += `<div class="print-item"><span>${k}</span><span>${v}</span></div>`;
+            }
+            html += `</div>`; 
+            if(extras) html += `<div class="print-extras"><strong>Observações:</strong><br>${extras}</div>`;
+            
+            area.innerHTML = html;
+            window.print();
+        }
+
+        // --- NOVO PRODUTO ---
+        window.openAddProductModal = () => { document.getElementById('modal-add-product').style.display = 'flex'; }
+        window.closeAddProductModal = () => { document.getElementById('modal-add-product').style.display = 'none'; }
+        window.addNewProduct = () => {
+            const desc = document.getElementById('new-prod-desc').value;
+            if(!desc) return;
+            filialInventory[desc] = {
+                descricao: desc,
+                categoria: document.getElementById('new-prod-cat').value || 'DIVERSOS',
+                marca: document.getElementById('new-prod-marca').value || '',
+                minimo: 0,
+                estoque: 0
+            };
+            saveStock();
+            closeAddProductModal();
+            renderStockTable();
+        }
+
+        // INICIALIZAÇÃO
+        goToPage('page-select-filial');
+
+    </script>
+</body>
+</html>
